@@ -11,7 +11,7 @@ const LogoutButton = () => {
         signOut(auth).then(() => {
             // Déconnexion réussie
             console.log('User signed out');
-            navigate('/login'); // Redirigez l'utilisateur vers la page de connexion après la déconnexion
+            navigate('/login'); // Redirige l'utilisateur vers la page de connexion après la déconnexion
         }).catch((error) => {
             // Une erreur s'est produite
             console.error('Logout Error', error);
@@ -19,7 +19,9 @@ const LogoutButton = () => {
     };
 
     return (
-        <button onClick={handleLogout}>Déconnexion</button>
+        <button onClick={handleLogout} className="text-gray-200 bg-red-600 px-4 py-2 rounded transition duration-200 ease-in-out hover:bg-red-500 shadow-md ml-4">
+            Déconnexion
+        </button>
     );
 };
 
