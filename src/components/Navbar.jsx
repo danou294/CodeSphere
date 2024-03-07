@@ -1,7 +1,7 @@
 // src/components/Navbar.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext'; // Ajustez le chemin si nécessaire
+import { useAuth } from './Contexts/AuthContext'; // Ajustez le chemin si nécessaire
 import LogoutButton from './Auth/LogoutButton'; // Assurez-vous que le chemin est correct
 
 const Navbar = () => {

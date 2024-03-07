@@ -1,6 +1,6 @@
-import ButtonTab from "./ButtonTab";
-import CodeTab from "./CodeTab";
-import Preview from "./Preview";
+import ButtonTab from "./ButtonTab.jsx";
+import CodeTab from "./CodeTab.jsx";
+import Preview from "./Preview.jsx";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 

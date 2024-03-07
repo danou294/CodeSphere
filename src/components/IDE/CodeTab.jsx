@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from "react-redux";
-import { updateCode } from "../features/tabs";
+import { updateCode } from "../../features/tabs.js";
 import Editor from '@monaco-editor/react';
 
 export default function CodeTab({ code, id, lang }) {

@@ -1,7 +1,6 @@
-// src/LoginForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from '../../firebaseConfig'; // Assurez-vous que le chemin est correct
 
 function LoginForm() {
@@ -10,26 +9,27 @@ function LoginForm() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleGoogleSignIn = () => {
+    const handleGoogleSignIn = async () => {
         const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider)
-            .then(() => {
-                console.log("Connexion Google réussie !");
-                navigate('/');
-            }).catch((error) => {
+        try {
+            await signInWithPopup(auth, provider);
+            console.log("Connexion Google réussie !");
+            navigate('/');
+        } catch (error) {
             setError("Erreur de connexion Google : " + error.message);
-        });
+        }
     };
 
-    const handleGithubSignIn = () => {
+
+    const handleGithubSignIn = async () => {
         const provider = new GithubAuthProvider();
-        signInWithPopup(auth, provider)
-            .then(() => {
-                console.log("Connexion GitHub réussie !");
-                navigate('/');
-            }).catch((error) => {
+        try {
+            await signInWithPopup(auth, provider);
+            console.log("Connexion GitHub réussie !");
+            navigate('/');
+        } catch (error) {
             setError("Erreur de connexion GitHub : " + error.message);
-        });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -73,14 +73,22 @@ function LoginForm() {
                 </div>
                 <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded-lg font-medium">Se connecter</button>
                 <div className="mt-4 flex flex-col space-y-2">
-                    <button onClick={handleGoogleSignIn} type="button" className="w-full p-3 bg-red-500 text-white rounded-lg font-medium flex items-center justify-center">
-                        <img src="/Assets/Google.png" alt="Google" className="w-6 h-6 mr-2" />
+                    <button onClick={handleGoogleSignIn} type="button"
+                            className="w-full p-3 bg-red-500 text-white rounded-lg font-medium flex items-center justify-center">
+                        <img src="/Assets/Google.png" alt="Google" className="w-6 h-6 mr-2"/>
                         Se connecter avec Google
                     </button>
-                    <button onClick={handleGithubSignIn} type="button" className="w-full p-3 bg-gray-600 text-white rounded-lg font-medium flex items-center justify-center">
-                        <img src="/Assets/github.png" alt="GitHub" className="w-6 h-6 mr-2" />
+                    <button onClick={handleGithubSignIn} type="button"
+                            className="w-full p-3 bg-gray-600 text-white rounded-lg font-medium flex items-center justify-center">
+                        <img src="/Assets/github.png" alt="GitHub" className="w-6 h-6 mr-2"/>
                         Se connecter avec GitHub
                     </button>
+                    <div className="text-center mt-4">
+                        <button type="button" onClick={() => navigate('/forgot-password')}
+                                className="text-sm text-blue-600 hover:underline">
+                            Mot de passe oublié ?
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

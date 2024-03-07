@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/contexts/AuthContext.jsx';
+import { AuthProvider } from './components/Contexts/AuthContext.jsx';
 import Navbar from './components/Navbar'; // Assurez-vous que le chemin est correct
-import Tabs from "./components/Tabs";
-import PreviewButton from "./components/PreviewButton";
+import Tabs from "./components/IDE/Tabs.jsx";
+import PreviewButton from "./components/IDE/PreviewButton.jsx";
 import SignupForm from './components/Auth/SignupForm';
 import LoginForm from './components/Auth/LoginForm';
+import ForgotPasswordForm from "./components/Auth/ForgotPasswordForm.jsx";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                         <Route path="/login" element={<LoginForm />} />
                         {/* La route principale pour Tabs */}
                         <Route path="/" element={<Tabs />} />
+                        <Route path="/forgot-password" element={<ForgotPasswordForm />} />
                     </Routes>
                 </div>
             </Router>
