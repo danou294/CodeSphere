@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { hidePreview } from "../features/preview";
+import { hidePreview } from "../../features/preview.js";
 
 export default function ButtonTab({ id, toggleTab, buttonContent, imgURL, isActive }) {
     const dispatch = useDispatch();

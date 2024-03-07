@@ -1,7 +1,7 @@
-import showViewIcon from "../assets/view.svg";
-import hideViewIcon from "../assets/hide.svg";
+import showViewIcon from "../../assets/view.svg";
+import hideViewIcon from "../../assets/hide.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { togglePreview } from "../features/preview";
+import { togglePreview } from "../../features/preview.js";
 
 export default function PreviewButton() {
   const previewData = useSelector(state => state.preview);
