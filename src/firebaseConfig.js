@@ -1,9 +1,7 @@
- // Import the functions you need from the SDKs you need
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
-
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,6 +14,7 @@ const firebaseConfig = {
     measurementId: "G-F9QB7JWK5N"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const auth = getAuth(app);

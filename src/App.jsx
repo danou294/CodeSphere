@@ -8,6 +8,7 @@ import LoginForm from './components/Auth/LoginForm';
 import ForgotPasswordForm from "./components/Auth/ForgotPasswordForm.jsx";
 import Home from './components/Home';
 import ProjectList from './components/ProjectCRUD/ProjectList'; // Importez le composant ProjectList
+import CreateProject from "./components/ProjectCRUD/CreateProject.jsx";
 
 // Composant PrivateRoute qui vérifie si l'utilisateur est connecté avant de rendre le composant
 const PrivateRoute = ({ element, ...rest }) => {
@@ -32,6 +33,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/editor" element={<Tabs />} />
                         <Route path="/projectlist" element={<PrivateRoute element={<ProjectList />} />} /> {/* Utilisation de PrivateRoute ici */}
+                        <Route path="/create-project" element={<CreateProject />} />
                     </Routes>
                 </div>
             </Router>
