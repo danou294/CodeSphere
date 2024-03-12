@@ -2,12 +2,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../public/Assets/logo.png';
+import { useAuth } from './Contexts/AuthContext.jsx'; // Importez le contexte d'authentification
 
 const Home = () => {
     const navigate = useNavigate();
+    const { currentUser } = useAuth(); // Obtenez l'utilisateur actuellement connecté depuis le contexte d'authentification
 
     const handleStartProject = () => {
-        navigate('/editor'); // Redirigez vers la page de l'éditeur ou du projet
+        if (currentUser) {
+            navigate('/projectlist'); // Redirigez vers la liste des projets si l'utilisateur est connecté
+        } else {
+            navigate('/editor'); // Redirigez vers l'éditeur si l'utilisateur n'est pas connecté
+        }
     };
 
     return (
