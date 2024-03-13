@@ -18,7 +18,9 @@ const Home = () => {
 
     return (
         <div className="home-container text-center p-10">
-            <img src={logo} alt="CodeSphere Logo" className="mx-auto w-48 h-48" />
+            <div className="max-w-48 mx-auto"> {/* Ajout de la classe max-w-48 pour définir la largeur maximale de la div */}
+                <img src={logo} alt="CodeSphere Logo" className="mx-auto w-full h-auto" /> {/* Modification des classes de l'image */}
+            </div>
             <h1 className="text-4xl font-bold mt-5">Bienvenue sur CodeSphere</h1>
             <p className="text-lg mt-5">
                 Découvrez l'expérience ultime de codage en ligne avec CodeSphere. Notre application innovante vous permet de créer, éditer et prévisualiser vos projets HTML, CSS, et JavaScript en temps réel, directement depuis votre navigateur. Que vous soyez un développeur expérimenté ou un passionné de technologie, CodeSphere est l'outil idéal pour donner vie à vos idées web.

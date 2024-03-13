@@ -57,7 +57,7 @@ function LoginForm() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="w-full p-2 border border-gray-300 rounded-lg"
+                        className="w-full text-black p-2 border border-gray-300 rounded-lg"
                     />
                 </div>
                 <div className="mb-5">
@@ -68,7 +68,7 @@ function LoginForm() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="w-full p-2 border border-gray-300 rounded-lg"
+                        className="w-full text-black p-2 border border-gray-300 rounded-lg"
                     />
                 </div>
                 <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded-lg font-medium">Se connecter</button>
