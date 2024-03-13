@@ -1,23 +1,52 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Importer Link pour créer des liens dans React Router
-
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { useAuth } from '../contexts/AuthContext';
+import { firestore } from '../../firebaseConfig';
+import UpdateProject from './UpdateProject';
+import DeleteProject from './DeleteProject';
 
 const ProjectList = () => {
-    const projects = [
-        { title: 'Projet 1', description: 'Description du projet 1' },
-        { title: 'Projet 2', description: 'Description du projet 2' },
-        { title: 'Projet 3', description: 'Description du projet 3' },
-        // Ajoutez plus de projets si nécessaire
-    ];
+    const [projects, setProjects] = useState([]);
+    const { currentUser } = useAuth();
+
+    useEffect(() => {
+        const fetchUserProjects = async () => {
+            if (currentUser) {
+                const userProjectsCollection = collection(firestore, 'projects');
+                const querySnapshot = await getDocs(userProjectsCollection);
+                const userProjectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setProjects(userProjectsData);
+            }
+        };
+
+        fetchUserProjects();
+
+        // Nettoyer les écouteurs de Firebase lors du démontage du composant
+        return () => {};
+    }, [currentUser]);
+
+    const handleDelete = async (projectId) => {
+        try {
+            await deleteDoc(doc(firestore, 'projects', projectId));
+            setProjects(projects.filter(project => project.id !== projectId));
+        } catch (error) {
+            console.error('Erreur lors de la suppression du projet : ', error);
+        }
+    };
 
     return (
         <div className="container mx-auto">
             <h1 className="text-3xl font-bold mt-5 mb-8">Liste des projets</h1>
             <div className="grid grid-cols-3 gap-4">
-                {projects.map((project, index) => (
-                    <div key={index} className="bg-gray-200 p-6 rounded cursor-pointer hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1">
+                {projects.map(project => (
+                    <div key={project.id} className="bg-gray-200 p-6 rounded cursor-pointer hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1">
                         <h2 className="text-xl font-semibold mb-3 text-blue-500">{project.title}</h2>
                         <p className="text-gray-700">{project.description}</p>
+                        <div className="flex justify-between mt-4">
+                            <UpdateProject projectId={project.id} />
+                            <DeleteProject projectId={project.id} onDelete={handleDelete} />
+                        </div>
                     </div>
                 ))}
             </div>

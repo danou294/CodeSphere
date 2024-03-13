@@ -81,45 +81,45 @@ function SignupForm() {
                     <div className="w-full md:w-1/2 px-3 mb-6">
                         <div className="mb-5">
                             <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-600">Prénom</label>
-                            <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-600">Nom</label>
-                            <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-600">Email</label>
-                            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="dateOfBirth" className="block mb-2 text-sm font-medium text-gray-600">Date de naissance</label>
-                            <input type="date" id="dateOfBirth" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="date" id="dateOfBirth" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                     </div>
                     <div className="w-full md:w-1/2 px-3 mb-6">
                         <div className="mb-5">
                             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-600">Mot de passe</label>
-                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-600">Confirmez le mot de passe</label>
-                            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="addressLine1" className="block mb-2 text-sm font-medium text-gray-600">Adresse Ligne 1</label>
-                            <input type="text" id="addressLine1" value={addressLine1} onChange={(e) => setAddressLine1(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="text" id="addressLine1" value={addressLine1} onChange={(e) => setAddressLine1(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="addressLine2" className="block mb-2 text-sm font-medium text-gray-600">Adresse Ligne 2 (Optionnel)</label>
-                            <input type="text" id="addressLine2" value={addressLine2} onChange={(e) => setAddressLine2(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="text" id="addressLine2" value={addressLine2} onChange={(e) => setAddressLine2(e.target.value)} className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="city" className="block mb-2 text-sm font-medium text-gray-600">Ville</label>
-                            <input type="text" id="city" value={city} onChange={(e) => setCity(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" />
+                            <input type="text" id="city" value={city} onChange={(e) => setCity(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg" />
                         </div>
                         <div className="mb-5">
                             <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-600">Sexe</label>
-                            <select id="gender" value={gender} onChange={(e) => setGender(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg">
+                            <select id="gender" value={gender} onChange={(e) => setGender(e.target.value)} required className="text-black w-full p-2 border border-gray-300 rounded-lg">
                                 <option value="">Sélectionnez</option>
                                 <option value="male">Homme</option>
                                 <option value="female">Femme</option>
