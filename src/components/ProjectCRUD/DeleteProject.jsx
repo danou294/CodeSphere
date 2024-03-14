@@ -1,16 +1,17 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importez useNavigate pour la redirection
-import { deleteDoc, doc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { deleteDoc, doc } from 'firebase/firestore'; // Importez deleteDoc et doc depuis firebase/firestore
 import { firestore } from '../../firebaseConfig';
 
 const DeleteProject = ({ projectId, onDelete }) => {
-    const navigate = useNavigate(); // Initialiser useNavigate
+    const navigate = useNavigate();
 
     const handleDelete = async () => {
+        console.log('Suppression du projet avec l\'ID :', projectId);
         try {
             await deleteDoc(doc(firestore, 'projects', projectId));
             onDelete(projectId);
-            navigate('/projectlist'); // Rediriger vers la page /projects après la suppression
+            navigate('/projectlist');
         } catch (error) {
             console.error('Erreur lors de la suppression du projet : ', error);
         }
