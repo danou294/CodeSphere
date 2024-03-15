@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import { firestore } from '../../firebaseConfig';
-import UpdateProject from './UpdateProject';
 import DeleteProject from './DeleteProject';
 
 const ProjectList = () => {
@@ -21,9 +20,6 @@ const ProjectList = () => {
         };
 
         fetchUserProjects();
-
-        // Nettoyer les écouteurs de Firebase lors du démontage du composant
-        return () => {};
     }, [currentUser]);
 
     const handleDelete = async (projectId) => {
@@ -44,7 +40,11 @@ const ProjectList = () => {
                         <h2 className="text-xl font-semibold mb-3 text-blue-500">{project.title}</h2>
                         <p className="text-gray-700">{project.description}</p>
                         <div className="flex justify-between mt-4">
-                            <UpdateProject projectId={project.id} />
+                            <Link to={`/update-project/${project.id}`}>
+                                <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                                    Modifier
+                                </button>
+                            </Link>
                             <DeleteProject projectId={project.id} onDelete={handleDelete} />
                         </div>
                     </div>

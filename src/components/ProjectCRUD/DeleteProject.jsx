@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteDoc, doc } from 'firebase/firestore'; // Importez deleteDoc et doc depuis firebase/firestore
+import { deleteDoc, doc } from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig';
 
 const DeleteProject = ({ projectId, onDelete }) => {
@@ -9,7 +9,9 @@ const DeleteProject = ({ projectId, onDelete }) => {
     const handleDelete = async () => {
         console.log('Suppression du projet avec l\'ID :', projectId);
         try {
+            console.log('Avant suppression du projet');
             await deleteDoc(doc(firestore, 'projects', projectId));
+            console.log('Après suppression du projet');
             onDelete(projectId);
             navigate('/projectlist');
         } catch (error) {
