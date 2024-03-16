@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { useAuth } from '../contexts/AuthContext'; // Importez le contexte d'authentification
-import { firestore } from '../../firebaseConfig'; // Assurez-vous que le chemin est correct
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useAuth } from '../contexts/AuthContext';
+import { firestore } from '../../firebaseConfig';
+import { baseProject } from '../../features/redux.js'; // Importer baseProject depuis redux.js
 
 function CreateProject() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const navigate = useNavigate();
-    const { currentUser } = useAuth(); // Récupérez l'utilisateur actuellement connecté
+    const { currentUser } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Vérifiez si le titre et la description sont fournis
         if (!title.trim() || !description.trim()) {
             console.error("Veuillez remplir tous les champs !");
             return;
         }
         try {
-            // Ajoutez un nouveau document à la collection "projects"
             const docRef = await addDoc(collection(firestore, "projects"), {
                 title,
                 description,
-                createdAt: serverTimestamp(), // Utilisez la date actuelle du serveur
-                author: currentUser.uid, // Utilisez l'ID de l'utilisateur actuellement connecté
-                collaboration: [] // Initialisez avec une liste de collaborateurs vide
+                html: baseProject.html, // Utiliser baseProject.html depuis redux.js
+                css: baseProject.css, // Utiliser baseProject.css depuis redux.js
+                js: baseProject.js, // Utiliser baseProject.js depuis redux.js
+                createdAt: serverTimestamp(),
+                author: currentUser.uid,
+                collaboration: []
             });
             console.log("Document written with ID: ", docRef.id);
-            // Redirigez l'utilisateur vers la liste des projets après l'ajout réussi
             navigate('/projectList');
         } catch (error) {
             console.error("Error adding document: ", error);
