@@ -1,0 +1,5 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:80" # Mapper le port 80 du conteneur au port 3000 de la machine hôte
