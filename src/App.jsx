@@ -75,11 +75,9 @@ function App() {
                         <Route path="/edit-project/:projectId" element={<PrivateRoute element={<EditProject />} />} />
                         <Route path="/presentation" element={<Presentation />} />
                         <Route path="/premium-offer" element={<PremiumOffer />} />
+                        <Route path="/404" element={<Error404 />} />
                         <Route path="/500" element={<Error500 />} />
                         <Route path="/construction" element={<UnderConstruction />} />
-
-                        {/* Route catch-all pour rediriger vers la page 404 */}
-                        <Route path="*" element={<Error404 />} />
                     </Routes>
                 </div>
             </Router>
