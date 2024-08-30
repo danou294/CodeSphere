@@ -45,13 +45,16 @@ const Navbar = () => {
                                         <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-2 rounded">Déconnexion</button>
                                     </>
                                 ) : (
-                                    <Link to="/login" className="bg-blue-500 text-white px-3 py-2 rounded">Connexion</Link>
+                                    <>
+                                        <Link to="/signup" className="bg-green-500 text-white px-3 py-2 rounded">Inscription</Link> {/* Nouveau bouton d'inscription */}
+                                        <Link to="/login" className="bg-blue-500 text-white px-3 py-2 rounded">Connexion</Link>
+                                    </>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    <Disclosure.Panel className={`lg:hidden transition-all ease-out duration-300 transform ${open ? 'max-h-screen' : 'max-h-0 overflow-hidden'}`}>
+                    <Disclosure.Panel className={`lg:hidden transition-all ease-out duration-300 ${open ? 'block' : 'hidden'}`}>
                         <div className="px-4 pt-2 pb-3 space-y-1">
                             <Link to="/presentation" className="block text-white hover:text-gray-300">À Propos</Link>
                             <Link to="/premium-offer" className="block text-white hover:text-gray-300">Offres Premium</Link>
@@ -61,7 +64,10 @@ const Navbar = () => {
                                     <button onClick={handleLogout} className="w-full text-left bg-red-500 text-white px-3 py-2 rounded">Déconnexion</button>
                                 </>
                             ) : (
-                                <Link to="/login" className="block bg-blue-500 text-white px-3 py-2 rounded">Connexion</Link>
+                                <>
+                                    <Link to="/signup" className="block bg-green-500 text-white px-3 py-2 rounded">Inscription</Link> {/* Nouveau bouton d'inscription */}
+                                    <Link to="/login" className="block bg-blue-500 text-white px-3 py-2 rounded">Connexion</Link>
+                                </>
                             )}
                         </div>
                     </Disclosure.Panel>
