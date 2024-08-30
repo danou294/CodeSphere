@@ -22,11 +22,17 @@ FROM nginx:alpine
 # Copier les fichiers de build depuis le conteneur de build
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copier la configuration Nginx
+# Copier la configuration Nginx et les certificats SSL
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/certificat.cer /etc/nginx/certificat.cer
+COPY nginx/Codesphere_key.key /etc/nginx/Codesphere_key.key
 
-# Exposer le port sur lequel Nginx écoute
-EXPOSE 80
+# Définir les permissions de la clé privée
+RUN chmod 600 /etc/nginx/Codesphere_key.key \
+    && chown nginx:nginx /etc/nginx/Codesphere_key.key
+
+# Exposer les ports HTTP et HTTPS
+EXPOSE 80 443
 
 # Commande pour démarrer Nginx
 CMD ["nginx", "-g", "daemon off;"]
