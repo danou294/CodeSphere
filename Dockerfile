@@ -1,5 +1,5 @@
-# Étape de construction
-FROM node:18-alpine AS builder
+# Utiliser une image Node.js officielle
+FROM node:18-alpine
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
@@ -16,14 +16,10 @@ COPY . .
 # Construire l'application pour la production
 RUN npm run build
 
-# Étape de production
-FROM nginx:alpine
+RUN npm start
 
-# Copier les fichiers de build depuis le conteneur de build
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Exposer le port sur lequel Vite écoute en mode de développement
+EXPOSE 3000
 
-# Exposer le port sur lequel Nginx écoute
-EXPOSE 80
-
-# Commande pour démarrer Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Commande pour démarrer l'application en mode production
+CMD ["npm", "run", "preview"]
