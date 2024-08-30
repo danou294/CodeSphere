@@ -1,8 +1,10 @@
+// SignupForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 import { auth, firestore } from '../../firebaseConfig';
 import { doc, setDoc } from "firebase/firestore";
+import { toast } from 'react-toastify'; // Importer toast de react-toastify
 
 function SignupForm() {
     const [email, setEmail] = useState('');
@@ -21,21 +23,18 @@ function SignupForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            setError("Les mots de passe ne correspondent pas.");
+            toast.error("Les mots de passe ne correspondent pas."); // Notification d'erreur
             return;
         }
         if (password.length < 6) {
-            setError("Le mot de passe doit contenir au moins 6 caractères.");
+            toast.error("Le mot de passe doit contenir au moins 6 caractères."); // Notification d'erreur
             return;
         }
 
-        setError('');
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            // Concatenate address parts before storing
             const fullAddress = `${addressLine1}, ${addressLine2}, ${city}`;
-            // Store additional user info in Firestore
             await setDoc(doc(firestore, "users", user.uid), {
                 email,
                 firstName,
@@ -44,10 +43,10 @@ function SignupForm() {
                 gender,
                 dateOfBirth,
             });
-            console.log("Inscription réussie !");
-            navigate('/'); // Redirect to home or dashboard page
+            toast.success("Inscription réussie !"); // Notification de succès
+            navigate('/');
         } catch (error) {
-            setError("Erreur d'inscription : " + error.message);
+            toast.error("Erreur d'inscription : " + error.message); // Notification d'erreur
         }
     };
 
@@ -55,9 +54,10 @@ function SignupForm() {
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
+            toast.success("Inscription avec Google réussie !"); // Notification de succès
             navigate('/');
         } catch (error) {
-            setError("Erreur d'authentification avec Google : " + error.message);
+            toast.error("Erreur d'authentification avec Google : " + error.message); // Notification d'erreur
         }
     };
 
@@ -65,9 +65,10 @@ function SignupForm() {
         const provider = new GithubAuthProvider();
         try {
             await signInWithPopup(auth, provider);
+            toast.success("Inscription avec GitHub réussie !"); // Notification de succès
             navigate('/');
         } catch (error) {
-            setError("Erreur d'authentification avec GitHub : " + error.message);
+            toast.error("Erreur d'authentification avec GitHub : " + error.message); // Notification d'erreur
         }
     };
 

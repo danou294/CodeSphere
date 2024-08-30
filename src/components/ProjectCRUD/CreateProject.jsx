@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../Contexts/AuthContext.jsx';
 import { firestore } from '../../firebaseConfig';
-import { baseProject } from '../../features/redux.js'; // Importer baseProject depuis redux.js
+import { baseProject } from '../../features/redux.js'; 
 
 function CreateProject() {
     const [title, setTitle] = useState('');
@@ -23,7 +23,7 @@ function CreateProject() {
                 description,
                 html: baseProject.html, // Utiliser baseProject.html depuis redux.js
                 css: baseProject.css, // Utiliser baseProject.css depuis redux.js
-                js: baseProject.js, // Utiliser baseProject.js depuis redux.js
+                javascript: baseProject.js, // Utiliser baseProject.js depuis redux.js
                 createdAt: serverTimestamp(),
                 author: currentUser.uid,
                 collaboration: []
