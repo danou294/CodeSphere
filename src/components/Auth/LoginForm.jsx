@@ -1,46 +1,45 @@
+// LoginForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, sendPasswordResetEmail } from "firebase/auth";
-import { auth } from '../../firebaseConfig'; // Assurez-vous que le chemin est correct
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import { auth } from '../../firebaseConfig';
+import { toast } from 'react-toastify'; // Importer toast de react-toastify
 
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleGoogleSignIn = async () => {
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
-            console.log("Connexion Google réussie !");
+            toast.success('Connexion Google réussie !'); // Notification de succès
             navigate('/');
         } catch (error) {
-            setError("Erreur de connexion Google : " + error.message);
+            toast.error("Erreur de connexion Google : " + error.message); // Notification d'erreur
         }
     };
-
 
     const handleGithubSignIn = async () => {
         const provider = new GithubAuthProvider();
         try {
             await signInWithPopup(auth, provider);
-            console.log("Connexion GitHub réussie !");
+            toast.success('Connexion GitHub réussie !'); // Notification de succès
             navigate('/');
         } catch (error) {
-            setError("Erreur de connexion GitHub : " + error.message);
+            toast.error("Erreur de connexion GitHub : " + error.message); // Notification d'erreur
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            console.log("Connexion réussie !");
+            toast.success('Connexion réussie !'); // Notification de succès
             navigate('/');
         } catch (error) {
-            setError("Erreur de connexion : " + error.message);
+            toast.error("Erreur de connexion : " + error.message); // Notification d'erreur
         }
     };
 
@@ -48,7 +47,6 @@ function LoginForm() {
         <div className="flex justify-center items-center h-screen bg-gray-100">
             <form onSubmit={handleSubmit} className="p-10 bg-white rounded-lg shadow-lg min-w-[400px]">
                 <h2 className="text-2xl font-bold mb-5 text-gray-800">Connexion</h2>
-                {error && <p className="bg-red-100 text-red-700 p-3 rounded">{error}</p>}
                 <div className="mb-5">
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-600">Email</label>
                     <input

@@ -1,7 +1,8 @@
-// src/components/LogoutButton.jsx
+// LogoutButton.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
+import { toast } from 'react-toastify'; // Importer toast de react-toastify
 
 const LogoutButton = () => {
     const navigate = useNavigate();
@@ -9,12 +10,10 @@ const LogoutButton = () => {
     const handleLogout = () => {
         const auth = getAuth();
         signOut(auth).then(() => {
-            // Déconnexion réussie
-            console.log('User signed out');
-            navigate('/login'); // Redirige l'utilisateur vers la page de connexion après la déconnexion
+            toast.success('Déconnexion réussie !'); // Notification de succès
+            navigate('/login');
         }).catch((error) => {
-            // Une erreur s'est produite
-            console.error('Logout Error', error);
+            toast.error('Erreur de déconnexion : ' + error.message); // Notification d'erreur
         });
     };
 

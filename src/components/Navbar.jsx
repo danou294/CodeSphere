@@ -1,32 +1,40 @@
-// src/components/Navbar.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from './Contexts/AuthContext'; // Ajustez le chemin si nécessaire
-import LogoutButton from './Auth/LogoutButton'; // Assurez-vous que le chemin est correct
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './Contexts/AuthContext.jsx';
 
 const Navbar = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/');
+        } catch (error) {
+            console.error("Erreur lors de la déconnexion :", error);
+        }
+    };
 
     return (
-        <div className="bg-gray-800 px-6 py-5 flex justify-between items-center border-b border-gray-700">
-            <Link to="/" className="text-xl font-semibold text-white">
-                Welcome to <span className="text-sm font-light">CodeSphere</span>
-            </Link>
-            <div className="flex items-center gap-4">
-                {currentUser ? (
-                    <LogoutButton />
-                ) : (
-                    <>
-                        <Link to="/login" className="text-gray-200 bg-blue-500 px-4 py-2 rounded transition duration-200 ease-in-out hover:bg-blue-400 shadow-md">
-                            Se connecter
-                        </Link>
-                        <Link to="/signup" className="text-gray-200 bg-green-500 px-4 py-2 rounded transition duration-200 ease-in-out hover:bg-green-400 shadow-md">
-                            S'inscrire
-                        </Link>
-                    </>
-                )}
+        <nav className="bg-gray-800 p-4">
+            <div className="container mx-auto flex justify-between items-center">
+                <Link to="/" className="text-white text-2xl font-bold">CodeSphere</Link>
+                <div>
+                    {currentUser ? (
+                        <>
+                            <Link to="/projectlist" className="text-white mr-4">Mes Projets</Link>
+                            <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-2 rounded">Déconnexion</button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/presentation" className="text-white mr-4">Qui sommes nous ?</Link>
+                            <Link to="/premium" className="text-white mr-4">Offre Premium</Link>
+                            <Link to="/login" className="bg-blue-500 text-white px-3 py-2 rounded">Connexion</Link>
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
+        </nav>
     );
 };
 

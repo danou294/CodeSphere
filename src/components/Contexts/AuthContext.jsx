@@ -1,7 +1,7 @@
 // src/Contexts/AuthContext.jsx
 import React, { useContext, useState, useEffect, createContext } from 'react';
-import { auth } from '../../firebaseConfig'; // Corrigez le chemin si nécessaire
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebaseConfig'; // Assurez-vous que le chemin est correct
+import { onAuthStateChanged, signOut } from 'firebase/auth'; // Importer signOut
 
 const AuthContext = createContext();
 
@@ -22,8 +22,18 @@ export const AuthProvider = ({ children }) => {
         return unsubscribe;
     }, []);
 
+    const logout = async () => {
+        try {
+            await signOut(auth);
+            setCurrentUser(null); // Réinitialise l'utilisateur actuel après déconnexion
+        } catch (error) {
+            console.error("Erreur lors de la déconnexion : ", error);
+        }
+    };
+
     const value = {
-        currentUser
+        currentUser,
+        logout // Ajout de la fonction logout au contexte
     };
 
     return (
