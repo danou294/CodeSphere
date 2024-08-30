@@ -12,8 +12,8 @@ import CreateProject from "./components/ProjectCRUD/CreateProject.jsx";
 import EditProject from "./components/ProjectCRUD/ProjectIDE/EditProject.jsx"; 
 import Presentation from './components/pages/Presentation';
 import PremiumOffer from './components/pages/PremiumOffer';
-import Page404 from './components/pages/Error404';
-import Page500 from './components/pages/Error500';
+import Error404 from './components/pages/Error404';
+import Error500 from './components/pages/Error500';
 import UnderConstruction from './components/pages/UnderConstruction';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -75,9 +75,11 @@ function App() {
                         <Route path="/edit-project/:projectId" element={<PrivateRoute element={<EditProject />} />} />
                         <Route path="/presentation" element={<Presentation />} />
                         <Route path="/premium-offer" element={<PremiumOffer />} />
-                        <Route path="/404" element={<Page404 />} />
-                        <Route path="/500" element={<Page500 />} />
+                        <Route path="/500" element={<Error500 />} />
                         <Route path="/construction" element={<UnderConstruction />} />
+
+                        {/* Route catch-all pour rediriger vers la page 404 */}
+                        <Route path="*" element={<Error404 />} />
                     </Routes>
                 </div>
             </Router>
