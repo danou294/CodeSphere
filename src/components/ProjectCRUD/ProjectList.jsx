@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore'; // Ajout de 'query' et 'where'
 import { useAuth } from '../Contexts/AuthContext';
 import { firestore } from '../../firebaseConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,8 +17,10 @@ const ProjectList = () => {
     useEffect(() => {
         const fetchUserProjects = async () => {
             if (currentUser) {
+                // Utiliser la requête 'query' pour filtrer les projets par 'userId'
                 const userProjectsCollection = collection(firestore, 'projects');
-                const querySnapshot = await getDocs(userProjectsCollection);
+                const q = query(userProjectsCollection, where('author', '==', currentUser.uid)); // Filtrer par 'userId'
+                const querySnapshot = await getDocs(q);
                 const userProjectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setProjects(userProjectsData);
             }
@@ -33,8 +35,8 @@ const ProjectList = () => {
             text: "Cette action est irréversible. Voulez-vous continuer ?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6', // Couleur de confirmation originale
-            cancelButtonColor: '#d33',     // Couleur d'annulation originale
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Oui, supprimer',
             cancelButtonText: 'Annuler'
         });
@@ -84,11 +86,11 @@ const ProjectList = () => {
                             <h2 className="text-xl font-semibold mb-2 text-gray-700">{project.title}</h2>
                             <p className="text-gray-500 mb-4">{project.description}</p>
                             <div className="absolute bottom-2 right-2 flex space-x-2">
-                            <FontAwesomeIcon 
-    icon={faEdit} 
-    className="text-yellow-500 cursor-pointer hover:text-yellow-700" 
-    onClick={() => navigate(`/edit-project/${project.id}`)} // Utiliser navigate pour aller à l'éditeur
-/>
+                                <FontAwesomeIcon 
+                                    icon={faEdit} 
+                                    className="text-yellow-500 cursor-pointer hover:text-yellow-700" 
+                                    onClick={() => navigate(`/edit-project/${project.id}`)}
+                                />
                                 <FontAwesomeIcon icon={faTrash} className="text-red-500 cursor-pointer hover:text-red-700" onClick={() => handleDelete(project.id)} />
                             </div>
                             <button 
