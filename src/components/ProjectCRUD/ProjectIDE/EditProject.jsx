@@ -6,11 +6,14 @@ import { firestore } from '../../../firebaseConfig';
 import { Provider } from 'react-redux';
 import ConnectedTabs from './ConnectedTabs';
 import { setPreviewVisible } from '../../../projectStore'; // Importer l'action setPreviewVisible
+import ChatButton from '../../chat/ChatButton';  // Assurez-vous que le chemin est correct
+import ChatPanel from '../../chat/ChatPanel';    // Assurez-vous que le chemin est correct
 
 const EditProject = () => {
     const { projectId } = useParams();
     const [storeData, setStoreData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -43,10 +46,16 @@ const EditProject = () => {
 
     const { store } = storeData;
 
+    const toggleChat = () => {
+        setIsChatOpen(!isChatOpen);
+    };
+
     return (
         <Provider store={store}>
             <div className="flex flex-col h-screen">
                 <ConnectedTabs />
+                <ChatButton onClick={toggleChat} />
+                {isChatOpen && <ChatPanel isOpen={isChatOpen} onClose={toggleChat} />}
             </div>
         </Provider>
     );
