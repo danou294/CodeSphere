@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { listSessions, createSession, deleteSession } from '../../services/chatService';
-import ChatListItem from './ChatListItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 
 const ChatSidebar = ({ participantId, onSelectSession }) => {
     const [sessions, setSessions] = useState([]);
-    const [selectedSession, setSelectedSession] = useState(null); // Ajout d'un état pour la session sélectionnée
+    const [selectedSession, setSelectedSession] = useState(null);
 
     useEffect(() => {
         const fetchSessions = async () => {
@@ -53,7 +52,7 @@ const ChatSidebar = ({ participantId, onSelectSession }) => {
             try {
                 await deleteSession(sessionId);
                 setSessions(prevSessions => prevSessions.filter(session => session.id !== sessionId));
-                setSelectedSession(null); // Réinitialiser la session sélectionnée si elle est supprimée
+                setSelectedSession(null);
                 Swal.fire('Supprimé', 'La discussion a été supprimée avec succès.', 'success');
             } catch (error) {
                 console.error(`Erreur lors de la suppression de la session ${sessionId}:`, error);
@@ -63,41 +62,52 @@ const ChatSidebar = ({ participantId, onSelectSession }) => {
     };
 
     const handleSelectSession = (session) => {
-        setSelectedSession(session); // Mettre à jour la session sélectionnée
-        onSelectSession(session); // Appeler la fonction de rappel pour gérer la sélection de la session
+        setSelectedSession(session);
+        onSelectSession(session);
     };
 
     return (
         <div className="bg-gray-700 text-white p-4 h-full flex flex-col">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold">Discussions</h2>
-                <button onClick={handleCreateSession} className="bg-green-500 text-white p-2 rounded-full hover:bg-green-600">
-                    <FontAwesomeIcon icon={faPlus} />
+                <button
+                    onClick={handleCreateSession}
+                    className="bg-blue-500 text-white w-12 h-12 rounded-full shadow-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-transform transform hover:scale-105 flex items-center justify-center"
+                >
+                    <FontAwesomeIcon
+                        icon={faPlus}
+                        className="text-xl"
+                    />
                 </button>
             </div>
-            <ul className="flex-1 overflow-y-auto space-y-2">
-                {sessions.length > 0 ? (
-                    sessions.map(session => (
-                        <li
-                            key={session.id}
-                            className={`flex justify-between items-center p-2 rounded-lg cursor-pointer ${selectedSession?.id === session.id ? 'bg-blue-500' : 'bg-gray-600 hover:bg-gray-500'}`}
-                            onClick={() => handleSelectSession(session)}
-                        >
-                            {`Conversation n°${session.id}`}
-                            <FontAwesomeIcon 
-                                icon={faTrash} 
-                                className="text-red-500 cursor-pointer hover:text-red-700" 
-                                onClick={(e) => {
-                                    e.stopPropagation(); // Empêche la sélection de la session lors de la suppression
-                                    handleDeleteSession(session.id);
-                                }}
-                            />
-                        </li>
-                    ))
-                ) : (
-                    <p className="text-gray-300">Aucune discussion disponible.</p>
-                )}
-            </ul>
+            {/* Section avec une hauteur fixe pour la liste des conversations */}
+            <div className="h-40 overflow-y-auto">
+                <ul className="space-y-1">
+                    {sessions.length > 0 ? (
+                        sessions.map(session => (
+                            <li
+                                key={session.id}
+                                className={`flex justify-between items-center px-2 py-1 rounded-lg cursor-pointer ${
+                                    selectedSession?.id === session.id ? 'bg-blue-500' : 'bg-gray-600 hover:bg-gray-500'
+                                }`}
+                                onClick={() => handleSelectSession(session)}
+                            >
+                                {`Conversation n°${session.id}`}
+                                <FontAwesomeIcon
+                                    icon={faTrash}
+                                    className="text-red-500 cursor-pointer hover:text-red-700"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteSession(session.id);
+                                    }}
+                                />
+                            </li>
+                        ))
+                    ) : (
+                        <p className="text-gray-300">Aucune discussion disponible.</p>
+                    )}
+                </ul>
+            </div>
         </div>
     );
 };
