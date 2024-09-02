@@ -42,8 +42,20 @@ const EditProject = () => {
         fetchProject();
     }, [projectId]);
 
-    if (loading || !storeData) {
-        return <div>Chargement du projet...</div>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-gray-100">
+                <Spinner />
+            </div>
+        );
+    }
+
+    if (!storeData) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-gray-100">
+                <p>Le projet est introuvable.</p>
+            </div>
+        );
     }
 
     const { store } = storeData;
@@ -57,14 +69,21 @@ const EditProject = () => {
             <div className="flex flex-col h-screen relative">
                 <ConnectedTabs />
                 <ChatButton onClick={toggleChat} />
-                {isChatOpen && currentUser && (
-                    <div className="fixed right-0 top-0 bottom-0 w-1/3 h-full bg-gray-800 shadow-lg z-50">
-                        <ChatPanel participantId={currentUser.uid} onClose={toggleChat} />
-                    </div>
-                )}
+                <div
+                    className={`fixed right-0 top-0 bottom-0 w-1/3 h-full bg-gray-800 shadow-lg z-50 transform transition-transform duration-300 ${
+                        isChatOpen ? 'translate-x-0' : 'translate-x-full'
+                    }`}
+                >
+                    {currentUser && <ChatPanel participantId={currentUser.uid} onClose={toggleChat} />}
+                </div>
             </div>
         </Provider>
     );
 };
+
+// Composant Spinner pour le chargement
+const Spinner = () => (
+    <div className="w-8 h-8 border-4 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
+);
 
 export default EditProject;

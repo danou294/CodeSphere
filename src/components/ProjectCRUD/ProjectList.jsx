@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 
 const ProjectList = () => {
     const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true); // Ajouter l'état de chargement
     const { currentUser } = useAuth();
     const [selectedProject, setSelectedProject] = useState(null);
     const [isPopupVisible, setPopupVisibility] = useState(false);
@@ -17,12 +18,18 @@ const ProjectList = () => {
     useEffect(() => {
         const fetchUserProjects = async () => {
             if (currentUser) {
-                // Utiliser la requête 'query' pour filtrer les projets par 'userId'
-                const userProjectsCollection = collection(firestore, 'projects');
-                const q = query(userProjectsCollection, where('author', '==', currentUser.uid)); // Filtrer par 'userId'
-                const querySnapshot = await getDocs(q);
-                const userProjectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setProjects(userProjectsData);
+                try {
+                    // Utiliser la requête 'query' pour filtrer les projets par 'userId'
+                    const userProjectsCollection = collection(firestore, 'projects');
+                    const q = query(userProjectsCollection, where('author', '==', currentUser.uid)); // Filtrer par 'userId'
+                    const querySnapshot = await getDocs(q);
+                    const userProjectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setProjects(userProjectsData);
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des projets :", error);
+                } finally {
+                    setLoading(false); // Mettre fin à l'état de chargement
+                }
             }
         };
 
@@ -47,7 +54,7 @@ const ProjectList = () => {
                 setProjects(projects.filter(project => project.id !== projectId));
                 Swal.fire('Supprimé', 'Votre projet a été supprimé avec succès.', 'success');
             } catch (error) {
-                console.error('Error deleting project: ', error);
+                console.error('Erreur lors de la suppression du projet :', error);
                 Swal.fire('Erreur', 'Impossible de supprimer le projet.', 'error');
             }
         }
@@ -62,6 +69,14 @@ const ProjectList = () => {
             setPopupVisibility(true);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-gray-100">
+                <Spinner />
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto p-6 relative">
@@ -134,5 +149,10 @@ const ProjectList = () => {
         </div>
     );
 };
+
+// Composant Spinner pour le chargement
+const Spinner = () => (
+    <div className="w-8 h-8 border-4 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
+);
 
 export default ProjectList;

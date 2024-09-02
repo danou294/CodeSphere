@@ -57,15 +57,19 @@ const ChatPanel = ({ participantId, onClose }) => { // Ajout de onClose pour gé
                     <FontAwesomeIcon icon={faTimes} size="lg" />
                 </button>
             </div>
-            <ChatSidebar 
-                sessions={sessions} 
-                selectedSession={selectedSession} 
-                onSelectSession={handleSelectSession} 
-                participantId={participantId} 
-            />
-            <div className="flex flex-col h-full">
-                {/* Conteneur des messages */}
-                <div className="flex-1 p-4 overflow-y-auto space-y-2">
+            {/* Conteneur pour la liste des conversations et les messages */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Section pour la liste des conversations */}
+                <div className="h-40 overflow-y-auto">
+                    <ChatSidebar 
+                        sessions={sessions} 
+                        selectedSession={selectedSession} 
+                        onSelectSession={handleSelectSession} 
+                        participantId={participantId} 
+                    />
+                </div>
+                {/* Section pour les messages */}
+                <div className="flex-1 p-4 overflow-y-auto space-y-2" style={{ maxHeight: 'calc(100vh - 160px)', minHeight: '200px' }}>
                     {messages.length > 0 ? (
                         messages.map((message, index) => (
                             <div key={index} className={`p-2 rounded-lg ${message.is_from_user ? 'bg-blue-600' : 'bg-gray-600'}`}>
@@ -78,9 +82,13 @@ const ChatPanel = ({ participantId, onClose }) => { // Ajout de onClose pour gé
                         <p className="text-gray-400">Veuillez sélectionner une discussion.</p>
                     )}
                 </div>
-                {/* Input pour envoyer de nouveaux messages */}
-                {selectedSession && <ChatInput sessionId={selectedSession.id} onNewMessage={setMessages} />}
             </div>
+            {/* Input pour envoyer de nouveaux messages, toujours en bas */}
+            {selectedSession && (
+                <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 border-t border-gray-700">
+                    <ChatInput sessionId={selectedSession.id} onNewMessage={setMessages} />
+                </div>
+            )}
         </div>
     );
 };
