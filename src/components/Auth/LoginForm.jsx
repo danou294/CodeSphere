@@ -1,23 +1,30 @@
-// LoginForm.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 import { auth } from '../../firebaseConfig';
-import { toast } from 'react-toastify'; // Importer toast de react-toastify
+import { toast } from 'react-toastify';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                toast.success('Connexion réussie !');
+                navigate('/');
+            }
+        });
+        return () => unsubscribe();
+    }, [navigate]);
+
     const handleGoogleSignIn = async () => {
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
-            toast.success('Connexion Google réussie !'); // Notification de succès
-            navigate('/');
         } catch (error) {
-            toast.error("Erreur de connexion Google : " + error.message); // Notification d'erreur
+            toast.error("Erreur de connexion Google : " + error.message);
         }
     };
 
@@ -25,10 +32,8 @@ function LoginForm() {
         const provider = new GithubAuthProvider();
         try {
             await signInWithPopup(auth, provider);
-            toast.success('Connexion GitHub réussie !'); // Notification de succès
-            navigate('/');
         } catch (error) {
-            toast.error("Erreur de connexion GitHub : " + error.message); // Notification d'erreur
+            toast.error("Erreur de connexion GitHub : " + error.message);
         }
     };
 
@@ -36,10 +41,8 @@ function LoginForm() {
         e.preventDefault();
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            toast.success('Connexion réussie !'); // Notification de succès
-            navigate('/');
         } catch (error) {
-            toast.error("Erreur de connexion : " + error.message); // Notification d'erreur
+            toast.error("Erreur de connexion : " + error.message);
         }
     };
 
@@ -88,6 +91,9 @@ function LoginForm() {
                         </button>
                     </div>
                 </div>
+                <p className="mt-4 text-sm text-center text-gray-600">
+                    En continuant, vous acceptez nos <Link to="/cgu" className="text-blue-600 underline">conditions d'utilisation</Link>.
+                </p>
             </form>
         </div>
     );

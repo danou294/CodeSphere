@@ -5,7 +5,7 @@ const stripePromise = loadStripe('pk_test_51PuORi2KIj2nivFxkySNKXeLFuV0MV0qgQJ7k
 
 const createCheckoutSession = async () => {
     try {
-        const response = await fetch('/create-checkout-session', { method: 'POST' });
+        const response = await fetch('create-checkout-session/', { method: 'POST' });
         if (!response.ok) throw new Error('Network response was not ok.');
         const session = await response.json();
         return session;
@@ -14,17 +14,6 @@ const createCheckoutSession = async () => {
         throw error;
     }
 };
-
-const redirectToCheckout = async (sessionId) => {
-    const stripe = await stripePromise;
-    const result = await stripe.redirectToCheckout({ sessionId });
-    if (result.error) {
-        console.error('Failed to redirect to checkout:', result.error.message);
-        throw result.error;
-    }
-};
-
 export default {
     createCheckoutSession,
-    redirectToCheckout
 };

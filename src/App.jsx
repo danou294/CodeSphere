@@ -9,7 +9,7 @@ import ForgotPasswordForm from "./components/Auth/ForgotPasswordForm.jsx";
 import Home from './components/pages/Home.jsx';
 import ProjectList from './components/ProjectCRUD/ProjectList';
 import CreateProject from "./components/ProjectCRUD/CreateProject.jsx";
-import EditProject from "./components/ProjectCRUD/ProjectIDE/EditProject.jsx"; 
+import EditProject from "./components/ProjectCRUD/ProjectIDE/EditProject.jsx"
 import Presentation from './components/pages/Presentation';
 import PremiumOffer from './components/pages/PremiumOffer';
 import Error404 from './components/pages/Error404';
@@ -20,6 +20,8 @@ import { ToastContainer } from 'react-toastify';
 import CookieConsent, { Cookies } from "react-cookie-consent";
 import { FaCookieBite } from 'react-icons/fa'; // Importer une icône sympa
 import './App.css'; // Fichier CSS personnalisé
+import TermsAndConditions from './components/pages/TermsAndConditions';
+import ContactPage from './components/pages/Contact.jsx';
 
 const PrivateRoute = ({ element }) => {
     const { currentUser } = useAuth();
@@ -75,9 +77,12 @@ function App() {
                         <Route path="/edit-project/:projectId" element={<PrivateRoute element={<EditProject />} />} />
                         <Route path="/presentation" element={<Presentation />} />
                         <Route path="/premium-offer" element={<PremiumOffer />} />
-                        <Route path="/404" element={<Error404 />} />
+                        <Route path="/cgu" element={<TermsAndConditions />} />
+                        <Route path="/contact" element={<ContactPage />} />
+                        
+                        {/* Gestion des erreurs */}
                         <Route path="/500" element={<Error500 />} />
-                        <Route path="/construction" element={<UnderConstruction />} />
+                        <Route path="*" element={<Error404 />} /> {/* Pour toutes les autres routes, rediriger vers 404 */}
                     </Routes>
                 </div>
             </Router>
