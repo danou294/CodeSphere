@@ -20,7 +20,6 @@ import { ToastContainer } from 'react-toastify';
 import CookieConsent, { Cookies } from "react-cookie-consent";
 import { FaCookieBite } from 'react-icons/fa'; // Importer une icône sympa
 import './App.css'; // Fichier CSS personnalisé
-import PaymentComponent from './components/payment/paymentComponent.jsx';
 
 const PrivateRoute = ({ element }) => {
     const { currentUser } = useAuth();
@@ -79,7 +78,6 @@ function App() {
                         <Route path="/404" element={<Error404 />} />
                         <Route path="/500" element={<Error500 />} />
                         <Route path="/construction" element={<UnderConstruction />} />
-                        <Route path="/pay" element={<PaymentComponent/>} />
 
                     </Routes>
                 </div>
