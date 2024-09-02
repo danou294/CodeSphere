@@ -1,14 +1,15 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const ChatListItem = ({ session, onDelete }) => {
+const ChatListItem = ({ session, isSelected, onSelect, onDelete }) => {
     return (
-        <li className="flex items-center justify-between mb-2 p-2 bg-white shadow rounded">
-            <span>Chat #{session.id}</span>
-            <button onClick={onDelete} className="text-red-500 hover:text-red-700">
-                <FontAwesomeIcon icon={faTrash} />
-            </button>
+        <li
+            className={`p-2 mb-2 cursor-pointer rounded-lg ${isSelected ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200'} hover:bg-blue-700 transition-colors duration-200`}
+            onClick={onSelect}
+        >
+            <div className="flex justify-between items-center">
+                <span className="font-semibold">{`Conversation n°${session.id}`}</span>
+                <button onClick={onDelete} className="text-red-500">X</button>
+            </div>
         </li>
     );
 };

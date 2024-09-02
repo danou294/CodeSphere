@@ -8,12 +8,14 @@ import ConnectedTabs from './ConnectedTabs';
 import { setPreviewVisible } from '../../../projectStore'; // Importer l'action setPreviewVisible
 import ChatButton from '../../chat/ChatButton';  // Assurez-vous que le chemin est correct
 import ChatPanel from '../../chat/ChatPanel';    // Assurez-vous que le chemin est correct
+import { useAuth } from '../../Contexts/AuthContext'; // Importation du contexte d'authentification
 
 const EditProject = () => {
     const { projectId } = useParams();
     const [storeData, setStoreData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const { currentUser } = useAuth(); // Récupérer l'utilisateur actuel pour l'ID de participant
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -52,10 +54,14 @@ const EditProject = () => {
 
     return (
         <Provider store={store}>
-            <div className="flex flex-col h-screen">
+            <div className="flex flex-col h-screen relative">
                 <ConnectedTabs />
                 <ChatButton onClick={toggleChat} />
-                {isChatOpen && <ChatPanel isOpen={isChatOpen} onClose={toggleChat} />}
+                {isChatOpen && currentUser && (
+                    <div className="fixed right-0 top-0 bottom-0 w-1/3 h-full bg-gray-800 shadow-lg z-50">
+                        <ChatPanel participantId={currentUser.uid} onClose={toggleChat} />
+                    </div>
+                )}
             </div>
         </Provider>
     );
