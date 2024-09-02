@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000'; // Assurez-vous que cette URL est correcte
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log('API_BASE_URL:', API_BASE_URL);
 
 // Lister toutes les sessions de chat pour un utilisateur spécifique
 export const listSessions = async (participantId) => {
