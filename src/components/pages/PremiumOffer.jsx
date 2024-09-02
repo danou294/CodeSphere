@@ -1,8 +1,32 @@
-// PremiumOffer.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+
+// Chargez votre clé publique Stripe
+const stripePromise = loadStripe('pk_test_51PuORi2KIj2nivFxkySNKXeLFuV0MV0qgQJ7kvTjLHSWQvfimd4QasOa1AamBuKG8jt56DgGbQHDpdLZ0HQuiccx00SDqRcwLh');
 
 const PremiumOffer = () => {
+    const handleCheckout = async () => {
+        try {
+            const stripe = await stripePromise;
+            const response = await fetch('http://localhost:8000/create-checkout-session/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ price_id: 'prod_QlxFtLx9EY4gqp' })  // Assurez-vous de fournir le bon price_id ici
+            });
+            const session = await response.json();
+            const result = await stripe.redirectToCheckout({ sessionId: session.id });
+    
+            if (result.error) {
+                alert(result.error.message);
+            }
+        } catch (error) {
+            console.error('Failed to start the checkout process:', error);
+            alert('Failed to start the checkout process. Please try again later.');
+        }
+    };
+
     return (
         <div className="bg-gray-100 min-h-screen py-10 px-6">
             <div className="max-w-4xl mx-auto text-gray-800">
@@ -11,7 +35,6 @@ const PremiumOffer = () => {
                     <p className="mt-4 text-xl text-gray-700">Choisissez l'offre qui vous convient et libérez tout le potentiel de CodeSphere.</p>
                 </header>
 
-                {/* Section pour les simples visiteurs */}
                 <section className="mb-10">
                     <h2 className="text-3xl font-semibold text-blue-600">🌐 Explorateur CodeSphere</h2>
                     <p className="mt-4 text-gray-700 leading-relaxed">
@@ -24,7 +47,6 @@ const PremiumOffer = () => {
                     </ul>
                 </section>
 
-                {/* Section pour les visiteurs connectés */}
                 <section className="mb-10">
                     <h2 className="text-3xl font-semibold text-blue-600">👤 Membre CodeSphere</h2>
                     <p className="mt-4 text-gray-700 leading-relaxed">
@@ -37,7 +59,6 @@ const PremiumOffer = () => {
                     </ul>
                 </section>
 
-                {/* Section pour les visiteurs payants */}
                 <section className="mb-10">
                     <h2 className="text-3xl font-semibold text-blue-600">💎 CodeSphere Premium</h2>
                     <p className="mt-4 text-gray-700 leading-relaxed">
@@ -49,9 +70,9 @@ const PremiumOffer = () => {
                         <li>📈 <strong>Accès à des Ressources Avancées :</strong> Guides exclusifs, templates premium et plus encore.</li>
                     </ul>
                     <p className="mt-4 text-2xl font-semibold text-blue-600">15€ par mois</p>
-                    <Link to="/construction" className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300">
+                    <button onClick={handleCheckout} className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300">
                         Souscrire à CodeSphere Premium
-                    </Link>
+                    </button>
                 </section>
             </div>
         </div>
