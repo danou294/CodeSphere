@@ -1,4 +1,3 @@
-// SignupForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
@@ -18,10 +17,19 @@ function SignupForm() {
     const [gender, setGender] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [error, setError] = useState('');
+    const [acceptedTerms, setAcceptedTerms] = useState(false); // State pour la case à cocher
     const navigate = useNavigate();
+
+    const showTermsError = () => {
+        toast.error("Vous devez accepter les conditions d'utilisation pour vous inscrire."); // Notification d'erreur
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!acceptedTerms) {
+            showTermsError();
+            return;
+        }
         if (password !== confirmPassword) {
             toast.error("Les mots de passe ne correspondent pas."); // Notification d'erreur
             return;
@@ -51,6 +59,10 @@ function SignupForm() {
     };
 
     const signInWithGoogle = async () => {
+        if (!acceptedTerms) {
+            showTermsError();
+            return;
+        }
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
@@ -62,6 +74,10 @@ function SignupForm() {
     };
 
     const signInWithGithub = async () => {
+        if (!acceptedTerms) {
+            showTermsError();
+            return;
+        }
         const provider = new GithubAuthProvider();
         try {
             await signInWithPopup(auth, provider);
@@ -130,14 +146,40 @@ function SignupForm() {
                     </div>
                 </div>
 
-                <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded-lg font-medium">S'inscrire</button>
+                <div className="flex items-center mb-5">
+                    <input 
+                        type="checkbox" 
+                        id="terms" 
+                        checked={acceptedTerms} 
+                        onChange={() => setAcceptedTerms(!acceptedTerms)} 
+                        className="mr-2"
+                    />
+                    <label htmlFor="terms" className="text-sm text-gray-600">
+                        J'accepte les <a href="/cgu" className="text-blue-600 underline">conditions d'utilisation</a>
+                    </label>
+                </div>
+
+                <button 
+                    type="submit" 
+                    className="w-full p-3 bg-blue-600 text-white rounded-lg font-medium"
+                >
+                    S'inscrire
+                </button>
 
                 <div className="flex flex-col items-center mt-4">
-                    <button onClick={signInWithGoogle} type="button" className="mt-3 w-full p-3 bg-red-500 text-white rounded-lg font-medium flex items-center justify-center">
+                    <button 
+                        onClick={signInWithGoogle} 
+                        type="button" 
+                        className="mt-3 w-full p-3 bg-red-500 text-white rounded-lg font-medium flex items-center justify-center"
+                    >
                         <img src="/Assets/Google.png" alt="Google" className="w-6 h-6 mr-2" />
                         S'inscrire avec Google
                     </button>
-                    <button onClick={signInWithGithub} type="button" className="mt-3 w-full p-3 bg-gray-600 text-white rounded-lg font-medium flex items-center justify-center">
+                    <button 
+                        onClick={signInWithGithub} 
+                        type="button" 
+                        className="mt-3 w-full p-3 bg-gray-600 text-white rounded-lg font-medium flex items-center justify-center"
+                    >
                         <img src="/Assets/github.png" alt="GitHub" className="w-6 h-6 mr-2" />
                         S'inscrire avec GitHub
                     </button>

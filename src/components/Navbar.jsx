@@ -37,6 +37,7 @@ const Navbar = () => {
                                 </Disclosure.Button>
                             </div>
                             <div className="hidden lg:flex items-center space-x-4">
+                               <Link to="/contact" className="text-white hover:text-gray-300">Contact</Link>
                                 <Link to="/presentation" className="text-white hover:text-gray-300">À Propos</Link>
                                 <Link to="/premium-offer" className="text-white hover:text-gray-300">Offres Premium</Link>
                                 {currentUser ? (

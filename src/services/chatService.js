@@ -31,7 +31,7 @@ export const createSession = async (participantId) => {
 // Supprimer une session de chat
 export const deleteSession = async (sessionId) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/sessions/${sessionId}/`);
+        const response = await axios.delete(`${API_BASE_URL}/sessions/${sessionId}/delete/`);
         return response.data;
     } catch (error) {
         console.error('Erreur lors de la suppression de la session:', error);
@@ -66,7 +66,7 @@ export const getMessages = async (sessionId) => {
 // Supprimer un message spécifique
 export const deleteMessage = async (messageId) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/messages/${messageId}/`);
+        const response = await axios.delete(`${API_BASE_URL}/messages/${messageId}/delete/`);
         return response.data;
     } catch (error) {
         console.error('Erreur lors de la suppression du message:', error);
