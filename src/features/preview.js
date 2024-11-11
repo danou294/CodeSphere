@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  preview: true
+  preview: true,
 }
 
 export const preview = createSlice({
-  name: "preview",
+  name: 'preview',
   initialState,
   reducers: {
     togglePreview: (state) => {
@@ -13,9 +13,9 @@ export const preview = createSlice({
     },
     hidePreview: (state) => {
       state.preview = false
-    }
-  }
+    },
+  },
 })
 
-export const {togglePreview, hidePreview} = preview.actions
+export const { togglePreview, hidePreview } = preview.actions
 export default preview.reducer
