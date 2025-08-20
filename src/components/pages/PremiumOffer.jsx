@@ -1,20 +1,15 @@
-import React, { useEffect } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import QueryString from 'query-string'
 import { useAuth } from '../Contexts/AuthContext'
 import { toast } from 'react-toastify'
-import { firestore } from '../../firebaseConfig'
-import { doc, updateDoc, getDoc } from 'firebase/firestore'
-
-// Chargez votre clé publique Stripe
-const stripePromise = loadStripe(
-  'pk_test_51PuORi2KIj2nivFxkySNKXeLFuV0MV0qgQJ7kvTjLHSWQvfimd4QasOa1AamBuKG8jt56DgGbQHDpdLZ0HQuiccx00SDqRcwLh'
-)
+import { redirectToCheckout } from '../../services/stripeService'
+import { getMySubscription } from '../../services/userService'
 
 const PremiumOffer = () => {
   const { currentUser } = useAuth()
   const location = useLocation()
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
 
   useEffect(() => {
     // Vérifie si c'est un retour de redirection de Checkout
@@ -22,8 +17,8 @@ const PremiumOffer = () => {
 
     if (values.success) {
       toast.success('Paiement réussi! Vous avez maintenant accès au chatbot.')
-      // Mettre à jour l'utilisateur après un paiement réussi
-      updateUserSubscriptionStatus(true)
+      // Vérifier le statut de l'abonnement depuis le backend
+      checkSubscriptionStatus()
     }
 
     if (values.canceled) {
@@ -31,19 +26,19 @@ const PremiumOffer = () => {
         'Paiement annulé. Vous pouvez continuer à explorer les offres.'
       )
     }
-  }, [location.search])
 
-  const updateUserSubscriptionStatus = async (status) => {
+    // Vérifier le statut actuel de l'abonnement
+    if (currentUser) {
+      checkSubscriptionStatus()
+    }
+  }, [location.search, currentUser])
+
+  const checkSubscriptionStatus = async () => {
     try {
-      const userRef = doc(firestore, 'users', currentUser.uid)
-      await updateDoc(userRef, { hasPaidForChatbot: status })
-      toast.success('Votre statut de souscription a été mis à jour.')
+      const subscription = await getMySubscription()
+      setSubscriptionStatus(subscription)
     } catch (error) {
-      console.error(
-        'Erreur lors de la mise à jour du statut de souscription :',
-        error
-      )
-      toast.error('Erreur lors de la mise à jour du statut de souscription.')
+      console.error('Erreur lors de la vérification du statut:', error)
     }
   }
 
@@ -53,50 +48,41 @@ const PremiumOffer = () => {
       return
     }
 
-    try {
-      const userRef = doc(firestore, 'users', currentUser.uid)
-      const userSnap = await getDoc(userRef)
-      if (userSnap.exists() && userSnap.data().hasPaidForChatbot) {
-        toast.info("Vous avez déjà payé pour l'offre premium.")
-        return
-      }
-    } catch (error) {
-      console.error(
-        'Erreur lors de la vérification du statut de souscription :',
-        error
-      )
-      toast.error('Erreur lors de la vérification du statut de souscription.')
+    // Vérifier si l'utilisateur a déjà un abonnement actif
+    if (subscriptionStatus?.active) {
+      toast.info("Vous avez déjà un abonnement premium actif.")
       return
     }
 
     try {
-      const stripe = await stripePromise
-      const response = await fetch(
-        'http://localhost:8000/create-checkout-session/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ price_id: 'prod_QlxFtLx9EY4gqp' }),
-        }
-      )
-
-      if (!response.ok) {
-        const text = await response.text()
-        console.error('Response text:', text)
-        toast.error('Erreur lors de la création de la session de paiement.')
-        return
-      }
-
-      const session = await response.json()
-      window.location.href = session.url
+      await redirectToCheckout()
     } catch (error) {
       console.error('Failed to start the checkout process:', error)
       toast.error(
         'Échec du démarrage du processus de paiement. Veuillez réessayer plus tard.'
       )
     }
+  }
+
+  // Si l'utilisateur a déjà un abonnement actif
+  if (subscriptionStatus?.active) {
+    return (
+      <div className="bg-gray-100 min-h-screen py-10 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            <h2 className="text-2xl font-bold mb-2">🎉 Félicitations !</h2>
+            <p>Vous avez déjà un abonnement CodeSphere Premium actif.</p>
+            <p className="text-sm mt-2">
+              Statut: {subscriptionStatus.status} | 
+              Expire le: {new Date(subscriptionStatus.current_period_end * 1000).toLocaleDateString()}
+            </p>
+          </div>
+          <p className="text-gray-600">
+            Profitez de toutes les fonctionnalités premium de CodeSphere !
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
