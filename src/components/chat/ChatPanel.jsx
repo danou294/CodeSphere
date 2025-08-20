@@ -3,8 +3,7 @@ import ChatSidebar from './ChatSidebar'
 import ChatInput from './ChatInput'
 import { listSessions, getMessages } from '../../services/chatService'
 import { useAuth } from '../Contexts/AuthContext' // Assure-toi que le chemin est correct
-import { firestore } from '../../firebaseConfig'
-import { doc, getDoc } from 'firebase/firestore'
+import { getMySubscription } from '../../services/userService'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons' // Import de l'icône de fermeture
 import { FaRobot } from 'react-icons/fa' // Importer l'icône de robot
@@ -20,11 +19,8 @@ const ChatPanel = ({ participantId, onClose }) => {
     const checkSubscription = async () => {
       if (currentUser) {
         try {
-          const userRef = doc(firestore, 'users', currentUser.uid)
-          const userSnap = await getDoc(userRef)
-          if (userSnap.exists() && userSnap.data().hasPaidForChatbot) {
-            setHasPaid(true)
-          }
+          const subscription = await getMySubscription()
+          setHasPaid(!!subscription.active)
         } catch (error) {
           console.error(
             "Erreur lors de la vérification de l'abonnement :",

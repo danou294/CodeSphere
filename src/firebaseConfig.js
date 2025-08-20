@@ -4,23 +4,19 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCyvcqyuCAGvGJk-HByMEi2ns_Ml-0ZzqA",
-  authDomain: "codesphere-77591.firebaseapp.com",
-  databaseURL: "https://codesphere-77591-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "codesphere-77591",
-  storageBucket: "codesphere-77591.appspot.com",
-  messagingSenderId: "325545896794",
-  appId: "1:325545896794:web:d10c8c8f07427a3a8ba163",
-  measurementId: "G-F9QB7JWK5N"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const firestore = getFirestore(app);
+const analytics = (() => { try { return getAnalytics(app); } catch { return null; } })();
 const auth = getAuth(app);
+const firestore = getFirestore(app);
 
-export { app, firestore, auth };
+export { app, analytics, auth, firestore };

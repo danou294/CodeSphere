@@ -1,26 +1,22 @@
-import { loadStripe } from '@stripe/stripe-js'
+import { loadStripe } from '@stripe/stripe-js';
+import api from './http';
 
-// Charger l'URL de base de l'API et la clé publique Stripe depuis les variables d'environnement
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-const STRIPE_PUBLIC_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY
+const STRIPE_PUBLIC_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
-// Utiliser la clé publique de Stripe chargée depuis les variables d'environnement
-const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
+export const createCheckoutSession = async () => {
+  const { data } = await api.post(`/create-checkout-session/`);
+  return data; // { sessionId, url }
+};
 
-const createCheckoutSession = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/create-checkout-session/`, {
-      method: 'POST',
-    })
-    if (!response.ok) throw new Error('Network response was not ok.')
-    const session = await response.json()
-    return session
-  } catch (error) {
-    console.error('Failed to create checkout session:', error)
-    throw error
-  }
-}
+export const redirectToCheckout = async () => {
+  const stripe = await stripePromise;
+  const session = await createCheckoutSession();
+  return stripe.redirectToCheckout({ sessionId: session.sessionId });
+};
 
+// Export par défaut pour la compatibilité
 export default {
   createCheckoutSession,
-}
+  redirectToCheckout,
+};

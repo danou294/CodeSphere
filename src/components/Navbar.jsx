@@ -1,13 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './Contexts/AuthContext.jsx'
 import { toast } from 'react-toastify'
 import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline' // Utiliser les icônes de Heroicons v1
+import { getMySubscription } from '../services/userService'
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
+
+  useEffect(() => {
+    if (currentUser) {
+      checkSubscriptionStatus()
+    }
+  }, [currentUser])
+
+  const checkSubscriptionStatus = async () => {
+    try {
+      const subscription = await getMySubscription()
+      setSubscriptionStatus(subscription)
+    } catch (error) {
+      console.error('Erreur lors de la vérification du statut premium:', error)
+    }
+  }
 
   const handleLogout = async () => {
     try {
@@ -62,6 +79,11 @@ const Navbar = () => {
                     >
                       Mes Projets
                     </Link>
+                    {subscriptionStatus?.active && (
+                      <span className="bg-green-500 text-white px-3 py-2 rounded text-sm">
+                        💎 Premium
+                      </span>
+                    )}
                     <button
                       onClick={handleLogout}
                       className="bg-red-500 text-white px-3 py-2 rounded"
@@ -114,6 +136,11 @@ const Navbar = () => {
                   >
                     Mes Projets
                   </Link>
+                  {subscriptionStatus?.active && (
+                    <span className="block bg-green-500 text-white px-3 py-2 rounded text-sm text-center">
+                      💎 Premium
+                    </span>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="w-full text-left bg-red-500 text-white px-3 py-2 rounded"
