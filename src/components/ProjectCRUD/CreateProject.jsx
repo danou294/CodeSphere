@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { useAuth } from '../Contexts/AuthContext.jsx'
 import { firestore } from '../../firebaseConfig'
-import { baseProject } from '../../features/redux.js'
+import { defaultProject } from '../../constants/defaultProject'
+import { useProjectsStore } from '../../store'
 import { toast, ToastContainer } from 'react-toastify' // Importer Toastify
 import 'react-toastify/dist/ReactToastify.css' // Importer le style de Toastify
 
@@ -25,9 +26,9 @@ function CreateProject() {
       const docRef = await addDoc(collection(firestore, 'projects'), {
         title,
         description,
-        html: baseProject.html,
-        css: baseProject.css,
-        javascript: baseProject.js,
+        html: defaultProject.html,
+        css: defaultProject.css,
+        javascript: defaultProject.js,
         createdAt: serverTimestamp(),
         author: currentUser.uid,
         collaboration: [],
