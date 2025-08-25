@@ -1,91 +1,69 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { createProjectStore } from '../../../projectStore'
-import { doc, getDoc } from 'firebase/firestore'
-import { firestore } from '../../../firebaseConfig'
-import { Provider } from 'react-redux'
-import ConnectedTabs from './ConnectedTabs'
-import { setPreviewVisible } from '../../../projectStore' // Importer l'action setPreviewVisible
-import ChatButton from '../../chat/ChatButton' // Assurez-vous que le chemin est correct
-import ChatPanel from '../../chat/ChatPanel' // Assurez-vous que le chemin est correct
-import { useAuth } from '../../Contexts/AuthContext' // Importation du contexte d'authentification
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
+import { ArrowLeft, Code2 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import ModernIDE from '../../IDE/ModernIDE'
 
 const EditProject = () => {
-  const { projectId } = useParams()
-  const [storeData, setStoreData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [isChatOpen, setIsChatOpen] = useState(false)
-  const { currentUser } = useAuth() // Récupérer l'utilisateur actuel pour l'ID de participant
+  const navigate = useNavigate()
+  const [isLoading] = useState(false)
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const projectRef = doc(firestore, 'projects', projectId)
-        const projectSnap = await getDoc(projectRef)
-
-        if (projectSnap.exists()) {
-          const data = projectSnap.data()
-          const { store, actions } = createProjectStore(data)
-          // Active la prévisualisation par défaut
-          store.dispatch(setPreviewVisible(true))
-          setStoreData({ store, actions })
-        } else {
-          console.error("Le projet n'existe pas !")
-        }
-        setLoading(false)
-      } catch (error) {
-        console.error('Erreur lors de la récupération du projet :', error)
-        setLoading(false)
-      }
-    }
-
-    fetchProject()
-  }, [projectId])
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
-        <Spinner />
-      </div>
-    )
+  const handleBack = () => {
+    navigate('/projectlist')
   }
 
-  if (!storeData) {
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
-        <p>Le projet est introuvable.</p>
+      <div className="min-h-screen flex items-center justify-center bg-surface-50 dark:bg-surface-950">
+        <div className="w-8 h-8 border-4 border-t-4 border-primary-600 border-solid rounded-full animate-spin"></div>
       </div>
     )
-  }
-
-  const { store } = storeData
-
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen)
   }
 
   return (
-    <Provider store={store}>
-      <div className="flex flex-col h-screen relative">
-        <ConnectedTabs />
-        <ChatButton onClick={toggleChat} />
-        <div
-          className={`fixed right-0 top-0 bottom-0 w-1/3 h-full bg-gray-800 shadow-lg z-50 transform transition-transform duration-300 ${
-            isChatOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          {currentUser && (
-            <ChatPanel participantId={currentUser.uid} onClose={toggleChat} />
-          )}
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      {/* Header */}
+      <motion.header 
+        className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700 px-6 py-4"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleBack}
+              className="btn-ghost p-2"
+              title="Retour"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            
+            <div>
+              <h1 className="text-xl font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
+                <Code2 className="w-6 h-6 text-primary-600" />
+                Éditeur de Projet
+              </h1>
+              <p className="text-sm text-surface-600 dark:text-surface-400">
+                Utilisez l'IDE moderne pour éditer votre projet
+              </p>
+            </div>
+          </div>
         </div>
+      </motion.header>
+
+      {/* IDE */}
+      <div className="h-[calc(100vh-80px)]">
+        <ModernIDE 
+          projectName="Nouveau Projet"
+          onSave={(code) => {
+            console.log('Code sauvegardé:', code)
+            // Ici vous pouvez ajouter la logique de sauvegarde
+          }}
+        />
       </div>
-    </Provider>
+    </div>
   )
 }
-
-// Composant Spinner pour le chargement
-const Spinner = () => (
-  <div className="w-8 h-8 border-4 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
-)
 
 export default EditProject

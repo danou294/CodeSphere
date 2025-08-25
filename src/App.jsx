@@ -1,117 +1,111 @@
-import React, { useEffect } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom'
-import { AuthProvider, useAuth } from './components/Contexts/AuthContext.jsx'
-import Navbar from './components/Navbar'
-import Tabs from './components/IDE/Tabs.jsx'
-import SignupForm from './components/Auth/SignupForm'
-import LoginForm from './components/Auth/LoginForm'
-import ForgotPasswordForm from './components/Auth/ForgotPasswordForm.jsx'
-import Home from './components/pages/Home.jsx'
-import ProjectList from './components/ProjectCRUD/ProjectList'
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { AuthProvider } from './components/Contexts/AuthContext.jsx'
+import Navbar from './components/Navbar.jsx'
+import ModernIDE from './components/IDE/ModernIDE.jsx'
+import Home from './components/pages/Home.tsx'
+import PremiumOffer from './components/pages/PremiumOffer.tsx'
+import ModernEditProject from './components/ProjectCRUD/ProjectIDE/ModernEditProject.jsx'
 import CreateProject from './components/ProjectCRUD/CreateProject.jsx'
 import EditProject from './components/ProjectCRUD/ProjectIDE/EditProject.jsx'
-import Presentation from './components/pages/Presentation'
-import PremiumOffer from './components/pages/PremiumOffer'
-import Error404 from './components/pages/Error404'
-import Error500 from './components/pages/Error500'
-import UnderConstruction from './components/pages/UnderConstruction'
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
-import CookieConsent, { Cookies } from 'react-cookie-consent'
-import { FaCookieBite } from 'react-icons/fa' // Importer une icône sympa
-import './App.css' // Fichier CSS personnalisé
-import TermsAndConditions from './components/pages/TermsAndConditions'
-import ContactPage from './components/pages/Contact.jsx'
-
-const PrivateRoute = ({ element }) => {
-  const { currentUser } = useAuth()
-  return currentUser ? element : <Navigate to="/" replace />
-}
+import ProjectList from './components/ProjectCRUD/ProjectList.jsx'
+import Contact from './components/pages/Contact.jsx'
+import Presentation from './components/pages/Presentation.jsx'
+import TermsAndConditions from './components/pages/TermsAndConditions.tsx'
+import UnderConstruction from './components/pages/UnderConstruction.jsx'
+import Error404 from './components/pages/Error404.jsx'
+import Error500 from './components/pages/Error500.jsx'
+import LoginForm from './components/Auth/LoginForm.jsx'
+import SignupForm from './components/Auth/SignupForm.jsx'
+import ForgotPasswordForm from './components/Auth/ForgotPasswordForm.jsx'
+import LogoutButton from './components/Auth/LogoutButton.jsx'
+import ChatSidebar from './components/chat/ChatSidebar.jsx'
+import ChatPanel from './components/chat/ChatPanel.jsx'
+import ChatButton from './components/chat/ChatButton.jsx'
+import ChatInput from './components/chat/ChatInput.jsx'
+import ChatListItem from './components/chat/ChatListItem.jsx'
+import SubscriptionOverlay from './components/chat/SubscriptionOverlay.jsx'
+import CookieConsent from 'react-cookie-consent'
+import Footer from './components/Footer.jsx'
 
 function App() {
-  useEffect(() => {
-    const consentGiven = Cookies.get('userConsent')
-    if (consentGiven === 'true') {
-      // Ajouter des scripts de suivi ici si nécessaire
-    }
-  }, [])
-
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
-        <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
-        <CookieConsent
-          location="bottom"
-          buttonText="J'accepte"
-          declineButtonText="Je refuse"
-          cookieName="userConsent"
-          className="custom-cookie-banner" // Classe personnalisée pour le bandeau de cookies
-          buttonStyle={{
-            color: '#fff',
-            background: '#38a169',
-            fontSize: '14px',
-            padding: '10px 20px',
-            borderRadius: '5px',
-          }} // Style du bouton accepter
-          declineButtonStyle={{
-            color: '#fff',
-            background: '#e53e3e',
-            fontSize: '14px',
-            padding: '10px 20px',
-            borderRadius: '5px',
-          }} // Style du bouton refuser
-          expires={150}
-          enableDeclineButton
-          onAccept={() => {
-            Cookies.set('userConsent', 'true', { expires: 150 })
-          }}
-          onDecline={() => {
-            Cookies.set('userConsent', 'false', { expires: 150 })
-            Cookies.remove('analyticsCookie')
-            Cookies.remove('marketingCookie')
-          }}
-        >
-          <div className="flex items-center">
-            <FaCookieBite className="cookie-icon" />{' '}
-            {/* Ajout d'une icône sympa */}
-            Ce site utilise des cookies pour améliorer votre expérience. En
-            continuant, vous acceptez notre politique de cookies.
-          </div>
-        </CookieConsent>
-        <div className="bg-gray-800 min-h-screen flex flex-col text-gray-200">
+        <div className="min-h-screen animated-bg">
+          <Navbar />
           <Routes>
-            <Route path="/signup" element={<SignupForm />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/forgot-password" element={<ForgotPasswordForm />} />
             <Route path="/" element={<Home />} />
-            <Route path="/editor" element={<Tabs />} />
-            <Route
-              path="/projectlist"
-              element={<PrivateRoute element={<ProjectList />} />}
-            />
-            <Route
-              path="/create-project"
-              element={<PrivateRoute element={<CreateProject />} />}
-            />
-            <Route
-              path="/edit-project/:projectId"
-              element={<PrivateRoute element={<EditProject />} />}
-            />
-            <Route path="/presentation" element={<Presentation />} />
+            <Route path="/ide" element={<ModernIDE />} />
             <Route path="/premium-offer" element={<PremiumOffer />} />
-            <Route path="/cgu" element={<TermsAndConditions />} />
-            <Route path="/contact" element={<ContactPage />} />
-            {/* Gestion des erreurs */}
+            <Route path="/edit-project/:id" element={<ModernEditProject />} />
+            <Route path="/create-project" element={<CreateProject />} />
+            <Route path="/edit-project-old/:id" element={<EditProject />} />
+            <Route path="/projectlist" element={<ProjectList />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/presentation" element={<Presentation />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/under-construction" element={<UnderConstruction />} />
+            <Route path="/404" element={<Error404 />} />
             <Route path="/500" element={<Error500 />} />
-            <Route path="*" element={<Error404 />} />{' '}
-            {/* Pour toutes les autres routes, rediriger vers 404 */}
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/signup" element={<SignupForm />} />
+            <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+            <Route path="/logout" element={<LogoutButton />} />
+            <Route path="/chat" element={<ChatSidebar />} />
+            <Route path="/chat/:id" element={<ChatPanel />} />
+            <Route path="/chat-button" element={<ChatButton />} />
+            <Route path="/chat-input" element={<ChatInput />} />
+            <Route path="/chat-list-item" element={<ChatListItem />} />
+            <Route path="/subscription-overlay" element={<SubscriptionOverlay />} />
           </Routes>
+          
+          <Footer />
+          
+          <CookieConsent
+            location="bottom"
+            buttonText="Accepter"
+            declineButtonText="Refuser"
+            cookieName="codesphere_cookie_consent"
+            style={{ 
+              background: 'hsl(var(--surface-900))', 
+              color: 'hsl(var(--surface-100))',
+              borderTop: '1px solid hsl(var(--surface-700))'
+            }}
+            buttonStyle={{ 
+              background: 'hsl(var(--primary-600))', 
+              color: 'white', 
+              fontSize: '14px',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: 'none'
+            }}
+            declineButtonStyle={{ 
+              background: 'hsl(var(--surface-700))', 
+              color: 'hsl(var(--surface-100))', 
+              fontSize: '14px',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: 'none'
+            }}
+          >
+            Ce site utilise des cookies pour améliorer votre expérience. En continuant à naviguer, vous acceptez notre utilisation des cookies.
+          </CookieConsent>
+          
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </div>
       </Router>
     </AuthProvider>
