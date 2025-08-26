@@ -46,7 +46,7 @@ const defaultTabs: Tab[] = [
 
 export const useTabsStore = create<TabsState>()(
   devtools(
-    (set, get) => ({
+    (set, _get) => ({
       tabs: defaultTabs,
       activeTabId: 'html',
 
