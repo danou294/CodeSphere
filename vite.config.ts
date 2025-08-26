@@ -9,20 +9,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    dedupe: ['firebase'],
   },
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          firebase: ['firebase'],
-          stripe: ['@stripe/stripe-js', '@stripe/react-stripe-js'],
-          monaco: ['@monaco-editor/react'],
-          animations: ['framer-motion'],
-          icons: ['lucide-react', 'react-icons'],
-        },
-      },
-    },
     chunkSizeWarningLimit: 1000,
     target: 'esnext',
     minify: 'esbuild',
@@ -34,6 +23,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'framer-motion'],
+    exclude: ['firebase'],
   },
   css: {
     devSourcemap: true,
