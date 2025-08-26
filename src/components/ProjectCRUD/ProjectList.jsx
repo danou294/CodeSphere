@@ -131,16 +131,16 @@ const ProjectList = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-surface-50 via-blue-50 to-indigo-100 dark:from-surface-950 dark:via-blue-950 dark:to-indigo-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white/95 dark:bg-surface-0/95 backdrop-blur-xl flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-center"
         >
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
             className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full mx-auto mb-4"
           />
           <p className="text-surface-600 dark:text-surface-400 text-lg">Chargement de vos projets...</p>
@@ -150,57 +150,99 @@ const ProjectList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-50 via-blue-50 to-indigo-100 dark:from-surface-950 dark:via-blue-950 dark:to-indigo-900">
+    <div className="min-h-screen bg-white/95 dark:bg-surface-0/95 backdrop-blur-xl">
       <div className="container mx-auto p-6">
         {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <motion.div
-            whileHover={{ scale: 1.05, rotate: 5 }}
-            className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-500 to-accent-500 rounded-3xl mb-6 shadow-xl shadow-primary-500/25"
-          >
-            <FolderOpen className="w-10 h-10 text-white" />
-          </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-surface-900 to-surface-600 dark:from-white dark:to-surface-300 bg-clip-text text-transparent mb-4">
-            Mes Projets
-          </h1>
-          <p className="text-xl text-surface-600 dark:text-surface-400 max-w-2xl mx-auto">
-            Gérez et organisez tous vos projets de développement en un seul endroit
-          </p>
-        </motion.div>
+                          <motion.div
+           initial={{ opacity: 0, y: -15 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ 
+             duration: 0.4, 
+             ease: [0.25, 0.46, 0.45, 0.94]
+           }}
+                       className="text-center mb-16"
+         >
+           <motion.div
+             initial={{ scale: 0, rotate: -45 }}
+             animate={{ scale: 1, rotate: 0 }}
+             transition={{ 
+               duration: 0.5, 
+               ease: [0.34, 1.56, 0.64, 1]
+             }}
+             whileHover={{ 
+               scale: 1.03, 
+               rotate: 2,
+               y: -2
+             }}
+             whileTap={{ scale: 0.99 }}
+                           className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-500 to-accent-500 rounded-3xl mb-6 shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-50"
+           >
+             <FolderOpen className="w-10 h-10 text-white" />
+           </motion.div>
+           
+           <motion.h1
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ 
+               duration: 0.4, 
+               ease: [0.25, 0.46, 0.45, 0.94],
+               delay: 0.2
+             }}
+             className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-surface-900 to-surface-600 dark:from-white dark:to-surface-300 bg-clip-text text-transparent mb-4"
+           >
+             Mes Projets
+           </motion.h1>
+           
+                       <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.4, 
+                ease: [0.25, 0.46, 0.45, 0.94],
+                delay: 0.4
+              }}
+              className="text-xl text-surface-600 dark:text-white max-w-2xl mx-auto"
+            >
+              Gérez et organisez tous vos projets de développement en un seul endroit
+            </motion.p>
+         </motion.div>
 
         {/* Controls Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-surface-200/50 dark:shadow-black/50 border border-white/20 dark:border-surface-700/50 p-6 mb-8"
+                                   <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.995 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ 
+              duration: 0.3, 
+              ease: [0.25, 0.46, 0.45, 0.94],
+              delay: 0.6
+            }}
+            whileHover={{ 
+              scale: 1.002,
+              y: -0.5
+            }}
+                         className="bg-white/95 dark:bg-surface-100/95 backdrop-blur-xl rounded-3xl shadow-md shadow-surface-200/30 dark:shadow-surface-800/20 border border-surface-200/50 dark:border-surface-700/50 p-6 mb-8 transition-all duration-50"
         >
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-6">
             {/* Search Bar */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-surface-400" />
-              <input
-                type="text"
-                placeholder="Rechercher un projet..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
-              />
-            </div>
+                         <div className="relative flex-1 max-w-md">
+                               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-surface-600 dark:text-surface-400" />
+                               <input
+                  type="text"
+                  placeholder="Rechercher un projet..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl text-surface-600 dark:text-surface-400 placeholder-surface-600 dark:placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-50"
+                />
+             </div>
 
             {/* Filter Dropdown */}
-            <div className="relative">
-              <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-surface-400" />
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="pl-12 pr-8 py-3 bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer"
-              >
+                         <div className="relative">
+                               <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-surface-600 dark:text-surface-400" />
+                               <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="pl-12 pr-8 py-3 bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-2xl text-surface-600 dark:text-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-50 appearance-none cursor-pointer"
+                >
                 <option value="all">Tous les projets</option>
                 <option value="recent">Projets récents</option>
                 <option value="old">Projets anciens</option>
@@ -208,76 +250,125 @@ const ProjectList = () => {
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center space-x-2 bg-surface-100 dark:bg-surface-800 rounded-2xl p-1">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-xl transition-all duration-200 ${
-                  viewMode === 'grid'
-                    ? 'bg-primary-500 text-white shadow-lg'
-                    : 'text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
-                }`}
-              >
-                <Grid3X3 className="w-5 h-5" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded-xl transition-all duration-200 ${
-                  viewMode === 'list'
-                    ? 'bg-primary-500 text-white shadow-lg'
-                    : 'text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
-                }`}
-              >
-                <List className="w-5 h-5" />
-              </motion.button>
+                         <div className="flex items-center space-x-2 bg-surface-100 dark:bg-surface-800 rounded-2xl p-1">
+                             <motion.button
+                 whileHover={{ scale: 1.02 }}
+                 whileTap={{ scale: 0.98 }}
+                 transition={{ duration: 0.03 }}
+                 onClick={() => setViewMode('grid')}
+                                                                       className={`p-2 rounded-xl transition-all duration-50 ${
+                     viewMode === 'grid'
+                       ? 'bg-primary-500 text-white shadow-lg'
+                       : 'text-surface-600 dark:text-white hover:text-surface-900 dark:hover:text-white'
+                   }`}
+               >
+                 <Grid3X3 className="w-5 h-5" />
+               </motion.button>
+               <motion.button
+                 whileHover={{ scale: 1.02 }}
+                 whileTap={{ scale: 0.98 }}
+                 transition={{ duration: 0.03 }}
+                 onClick={() => setViewMode('list')}
+                                                                       className={`p-2 rounded-xl transition-all duration-50 ${
+                     viewMode === 'list'
+                       ? 'bg-primary-500 text-white shadow-lg'
+                       : 'text-surface-600 dark:text-white hover:text-surface-900 dark:hover:text-white'
+                   }`}
+               >
+                 <List className="w-5 h-5" />
+               </motion.button>
             </div>
 
             {/* Create Project Button */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link to="/create-project">
-                <button className="bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200 flex items-center space-x-2">
-                  <Plus className="w-5 h-5" />
-                  <span>Nouveau Projet</span>
-                </button>
-              </Link>
-            </motion.div>
+                         <motion.div
+               whileHover={{ scale: 1.01 }}
+               whileTap={{ scale: 0.99 }}
+               transition={{ duration: 0.03 }}
+             >
+               <Link to="/create-project">
+                                                                       <button className="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-2xl shadow-sm shadow-primary-500/20 hover:shadow-md hover:shadow-primary-500/25 transition-all duration-50 flex items-center space-x-2">
+                   <Plus className="w-5 h-5" />
+                   <span>Nouveau Projet</span>
+                 </button>
+               </Link>
+             </motion.div>
           </div>
         </motion.div>
 
         {/* Projects Section */}
         {filteredProjects.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-center py-20"
-          >
+                     <motion.div
+             initial={{ opacity: 0, scale: 0.98 }}
+             animate={{ opacity: 1, scale: 1 }}
+             transition={{ 
+               duration: 0.4, 
+               ease: [0.25, 0.46, 0.45, 0.94],
+               delay: 0.8
+             }}
+             className="text-center py-20"
+           >
             <motion.div
-              whileHover={{ scale: 1.1, rotate: 10 }}
-              className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-surface-200 to-surface-300 dark:from-surface-700 dark:to-surface-600 rounded-3xl mb-6"
+              initial={{ scale: 0, rotate: -45 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ 
+                duration: 0.4, 
+                ease: [0.34, 1.56, 0.64, 1],
+                delay: 0.5
+              }}
+              whileHover={{ 
+                scale: 1.08, 
+                rotate: 8,
+                y: -4
+              }}
+                             className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-surface-200 to-surface-300 dark:from-surface-700 dark:to-surface-600 rounded-3xl mb-6 shadow-sm hover:shadow-md transition-all duration-100"
             >
-              <Code2 className="w-12 h-12 text-surface-500 dark:text-surface-400" />
+              <Code2 className="w-12 h-12 text-primary-600 dark:text-primary-400" />
             </motion.div>
-            <h3 className="text-2xl font-bold text-surface-900 dark:text-white mb-4">
+            
+            <motion.h3
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.3, 
+                ease: [0.25, 0.46, 0.45, 0.94],
+                delay: 0.6
+              }}
+              className="text-2xl font-bold text-surface-900 dark:text-white mb-4"
+            >
               {searchTerm ? 'Aucun projet trouvé' : 'Aucun projet encore créé'}
-            </h3>
-            <p className="text-surface-600 dark:text-surface-400 mb-8 max-w-md mx-auto">
+            </motion.h3>
+            
+                         <motion.p
+               initial={{ opacity: 0, y: 15 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ 
+                 duration: 0.3, 
+                 ease: [0.25, 0.46, 0.45, 0.94],
+                 delay: 0.7
+               }}
+               className="text-slate-600 dark:text-white mb-8 max-w-md mx-auto"
+             >
               {searchTerm 
                 ? 'Essayez de modifier vos critères de recherche'
                 : 'Commencez par créer votre premier projet de développement !'
               }
-            </p>
+            </motion.p>
+            
             <Link to="/create-project">
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200 flex items-center space-x-3 mx-auto"
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ 
+                  duration: 0.3, 
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                  delay: 0.8
+                }}
+                whileHover={{ 
+                  scale: 1.03,
+                  y: -2
+                }}
+                whileTap={{ scale: 0.97 }}
+                                 className="bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 text-white font-semibold py-4 px-8 rounded-2xl shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-100 flex items-center space-x-3 mx-auto"
               >
                 <Plus className="w-6 h-6" />
                 <span>Créer mon premier projet</span>
@@ -286,27 +377,47 @@ const ProjectList = () => {
             </Link>
           </motion.div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-              : 'space-y-4'
-            }
-          >
+                     <motion.div
+             initial={{ opacity: 0, y: 15 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ 
+               duration: 0.4, 
+               ease: [0.25, 0.46, 0.45, 0.94],
+               delay: 0.8
+             }}
+             className={viewMode === 'grid' 
+               ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+               : 'space-y-4'
+             }
+           >
             <AnimatePresence>
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className={`bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-surface-200/50 dark:shadow-black/50 border border-white/20 dark:border-surface-700/50 overflow-hidden transition-all duration-300 ${
-                    viewMode === 'list' ? 'p-6' : 'p-6'
-                  }`}
+                                     initial={{ opacity: 0, y: 15, scale: 0.98, rotateY: -4 }}
+                   animate={{ opacity: 1, y: 0, scale: 1, rotateY: 0 }}
+                   exit={{ 
+                     opacity: 0, 
+                     y: -15, 
+                     scale: 0.98, 
+                     rotateY: 4,
+                     transition: { duration: 0.05 }
+                   }}
+                   transition={{ 
+                     delay: index * 0.1, 
+                     duration: 0.3,
+                     ease: [0.25, 0.46, 0.45, 0.94]
+                   }}
+                   whileHover={{ 
+                     y: -3, 
+                     scale: 1.01,
+                     rotateY: 0.5,
+                     transition: { duration: 0.05 }
+                   }}
+                   whileTap={{ scale: 0.995 }}
+                                     className={`bg-white/95 dark:bg-surface-100/95 backdrop-blur-xl rounded-3xl shadow-md shadow-surface-200/30 dark:shadow-surface-800/20 border border-surface-200/50 dark:border-surface-700/50 overflow-hidden transition-all duration-50 hover:shadow-lg hover:shadow-surface-300/30 dark:hover:shadow-surface-700/20 ${
+                     viewMode === 'list' ? 'p-6' : 'p-6'
+                   }`}
                 >
                   {/* Project Header */}
                   <div className="flex items-start justify-between mb-4">
@@ -318,14 +429,15 @@ const ProjectList = () => {
                         {project.description || 'Aucune description'}
                       </p>
                     </div>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => handleEyeClick(project)}
-                      className="ml-4 p-2 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-xl hover:bg-primary-200 dark:hover:bg-primary-900/50 transition-colors"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </motion.button>
+                                         <motion.button
+                       whileHover={{ scale: 1.02 }}
+                       whileTap={{ scale: 0.98 }}
+                       transition={{ duration: 0.03 }}
+                       onClick={() => handleEyeClick(project)}
+                                               className="ml-4 p-2 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-xl hover:bg-primary-200 dark:hover:bg-primary-900/50 transition-colors duration-50"
+                     >
+                       <Eye className="w-4 h-4" />
+                     </motion.button>
                   </div>
 
                   {/* Project Meta */}
@@ -345,35 +457,38 @@ const ProjectList = () => {
                   {/* Action Buttons */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => navigate(`/edit-project/${project.id}`)}
-                        className="p-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-xl hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors"
-                        title="Modifier"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleDelete(project.id)}
-                        className="p-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
-                        title="Supprimer"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </motion.button>
+                                             <motion.button
+                         whileHover={{ scale: 1.01 }}
+                         whileTap={{ scale: 0.99 }}
+                         transition={{ duration: 0.03 }}
+                         onClick={() => navigate(`/edit-project/${project.id}`)}
+                                                   className="p-2 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-xl hover:bg-primary-200 dark:hover:bg-primary-900/50 transition-colors duration-50"
+                         title="Modifier"
+                       >
+                         <Edit3 className="w-4 h-4" />
+                       </motion.button>
+                       <motion.button
+                         whileHover={{ scale: 1.01 }}
+                         whileTap={{ scale: 0.99 }}
+                         transition={{ duration: 0.03 }}
+                         onClick={() => handleDelete(project.id)}
+                         className="p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-colors duration-50"
+                         title="Supprimer"
+                       >
+                         <Trash2 className="w-4 h-4" />
+                       </motion.button>
                     </div>
                     
-                    <motion.button
-                      whileHover={{ scale: 1.05, x: 5 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => navigate(`/edit-project/${project.id}`)}
-                      className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium text-sm flex items-center space-x-1 transition-colors"
-                    >
-                      <span>Ouvrir</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.button>
+                                         <motion.button
+                       whileHover={{ scale: 1.01, x: 2 }}
+                       whileTap={{ scale: 0.99 }}
+                       transition={{ duration: 0.03 }}
+                       onClick={() => navigate(`/edit-project/${project.id}`)}
+                                               className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium text-sm flex items-center space-x-1 transition-colors duration-50"
+                     >
+                       <span>Ouvrir</span>
+                       <ArrowRight className="w-4 h-4" />
+                     </motion.button>
                   </div>
                 </motion.div>
               ))}
@@ -382,64 +497,129 @@ const ProjectList = () => {
         )}
 
         {/* Project Count */}
-        {filteredProjects.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="text-center mt-8 text-surface-500 dark:text-surface-400"
-          >
-            <p className="text-sm">
-              {filteredProjects.length} projet{filteredProjects.length > 1 ? 's' : ''} trouvé{filteredProjects.length > 1 ? 's' : ''}
-              {searchTerm && ` pour "${searchTerm}"`}
-            </p>
+                 {filteredProjects.length > 0 && (
+           <motion.div
+             initial={{ opacity: 0, y: 15 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ 
+               duration: 0.4, 
+               ease: [0.25, 0.46, 0.45, 0.94],
+               delay: 1.2
+             }}
+             className="text-center mt-8 text-surface-500 dark:text-white"
+           >
+                         <p className="text-sm text-surface-500 dark:text-white">
+               {filteredProjects.length} projet{filteredProjects.length > 1 ? 's' : ''} trouvé{filteredProjects.length > 1 ? 's' : ''}
+               {searchTerm && ` pour "${searchTerm}"`}
+             </p>
           </motion.div>
         )}
       </div>
 
-      {/* Preview Popup */}
-      <AnimatePresence>
-        {isPopupVisible && selectedProject && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 50 }}
-            transition={{ duration: 0.3 }}
-            className="fixed bottom-6 right-6 bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-3xl shadow-2xl p-4 w-80 h-96 z-50"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-semibold text-surface-900 dark:text-white text-sm">
-                Aperçu: {selectedProject.title}
-              </h4>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setPopupVisibility(false)}
-                className="p-1 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300"
-              >
-                <span className="text-lg">×</span>
-              </motion.button>
-            </div>
-            <iframe
-              className="w-full h-full border-none rounded-2xl"
-              srcDoc={`
-                <!DOCTYPE html>
-                <html>
-                  <head>
-                    <style>${selectedProject.css || ''}</style>
-                  </head>
-                  <body>
-                    ${selectedProject.html || ''}
-                    <script>${selectedProject.js || ''}</script>
-                  </body>
-                </html>
-              `}
-              sandbox="allow-scripts"
-              title="Preview"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+             {/* Preview Popup */}
+       <AnimatePresence>
+         {isPopupVisible && selectedProject && (
+           <>
+             {/* Backdrop */}
+             <motion.div
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               transition={{ duration: 0.2 }}
+               className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+               onClick={() => setPopupVisibility(false)}
+             />
+             
+             {/* Popup */}
+             <motion.div
+               initial={{ opacity: 0, scale: 0.9, y: 20 }}
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               exit={{ 
+                 opacity: 0, 
+                 scale: 0.9, 
+                 y: 20,
+                 transition: { duration: 0.1 }
+               }}
+               transition={{ 
+                 duration: 0.2, 
+                 ease: [0.25, 0.46, 0.45, 0.94]
+               }}
+                               className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-3xl shadow-2xl p-4 w-[95vw] max-w-5xl h-[95vh] max-h-[800px] z-50"
+             >
+                                                               <div className="flex items-center justify-between mb-2">
+                                     <h4 className="font-semibold text-surface-900 dark:text-surface-100 text-base">
+                     Aperçu: {selectedProject.title}
+                   </h4>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.1 }}
+                    onClick={() => setPopupVisibility(false)}
+                    className="p-2 text-surface-500 hover:text-surface-700 dark:text-surface-400 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-xl transition-all duration-200"
+                  >
+                    <span className="text-xl font-bold">×</span>
+                  </motion.button>
+                </div>
+                                                                                                                                       <div className="w-full h-[calc(100%-3rem)] overflow-hidden rounded-2xl">
+                    <iframe
+                      className="w-full h-full border-none bg-transparent"
+                      srcDoc={`
+                        <!DOCTYPE html>
+                        <html>
+                          <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <style>
+                              * {
+                                margin: 0;
+                                padding: 0;
+                                box-sizing: border-box;
+                              }
+                              
+                              html, body {
+                                width: 100%;
+                                height: 100%;
+                                margin: 0;
+                                padding: 0;
+                                background: transparent;
+                              }
+                              
+                              body {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                min-height: 100vh;
+                                background: transparent;
+                              }
+                              
+                              .project-container {
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                background: transparent;
+                              }
+                              
+                              ${selectedProject.css || ''}
+                            </style>
+                          </head>
+                          <body>
+                            <div class="project-container">
+                              ${selectedProject.html || ''}
+                            </div>
+                            <script>${selectedProject.js || ''}</script>
+                          </body>
+                        </html>
+                      `}
+                      sandbox="allow-scripts"
+                      title="Preview"
+                    />
+                  </div>
+             </motion.div>
+           </>
+         )}
+       </AnimatePresence>
     </div>
   )
 }

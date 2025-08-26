@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect, useCallback } from 'react'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Save, Play, Share2, Code2 } from 'lucide-react'
 import { doc, getDoc } from 'firebase/firestore'
@@ -11,58 +11,91 @@ import LoadingSpinner from '../../ui/LoadingSpinner'
 import { toast } from 'react-toastify'
 
 const ModernEditProject = () => {
-  const { projectId } = useParams()
+  const { projectId: paramsProjectId } = useParams()
+  const location = useLocation()
   const navigate = useNavigate()
   const { currentUser } = useAuth()
   const { currentProject, setCurrentProject, updateProject } = useProjectsStore()
   const { setActiveTab, updateTabContent } = useTabsStore()
   
+  // Fallback: extraire l'ID depuis l'URL si useParams ne fonctionne pas
+  const projectId = paramsProjectId || location.pathname.split('/').pop()
+  
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
 
-  useEffect(() => {
-    const loadProject = async () => {
-      if (!projectId || !currentUser) return
+  console.log('🔍 [ModernEditProject] Rendu du composant')
+  console.log('🔍 [ModernEditProject] URL actuelle:', window.location.href)
+  console.log('🔍 [ModernEditProject] location.pathname:', location.pathname)
+  console.log('🔍 [ModernEditProject] paramsProjectId:', paramsProjectId)
+  console.log('🔍 [ModernEditProject] projectId final:', projectId)
+  console.log('🔍 [ModernEditProject] useParams complet:', useParams())
+  console.log('🔍 [ModernEditProject] currentUser:', currentUser)
+  console.log('🔍 [ModernEditProject] currentProject:', currentProject)
+  console.log('🔍 [ModernEditProject] isLoading:', isLoading)
 
-      try {
-        const projectDoc = await getDoc(doc(firestore, 'projects', projectId))
-        
-        if (projectDoc.exists()) {
-          const projectData = projectDoc.data()
-          const project = {
-            id: projectDoc.id,
-            name: projectData.name || 'Projet sans nom',
-            description: projectData.description || '',
-            html: projectData.html || '',
-            css: projectData.css || '',
-            js: projectData.js || '',
-            createdAt: projectData.createdAt?.toDate() || new Date(),
-            updatedAt: projectData.updatedAt?.toDate() || new Date(),
-            tags: projectData.tags || []
-          }
-          
-          setCurrentProject(project)
-          
-          // Mettre à jour les onglets avec le contenu du projet
-          updateTabContent('html', project.html)
-          updateTabContent('css', project.css)
-          updateTabContent('js', project.js)
-          setActiveTab('html')
-        } else {
-          toast.error('Projet non trouvé')
-          navigate('/projectlist')
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement du projet:', error)
-        toast.error('Erreur lors du chargement du projet')
-        navigate('/projectlist')
-      } finally {
-        setIsLoading(false)
-      }
+  const loadProject = useCallback(async () => {
+    console.log('🚀 [ModernEditProject] loadProject appelé')
+    console.log('🚀 [ModernEditProject] projectId:', projectId)
+    console.log('🚀 [ModernEditProject] currentUser:', currentUser)
+    
+    if (!projectId || !currentUser) {
+      console.log('❌ [ModernEditProject] projectId ou currentUser manquant')
+      return
     }
 
-    loadProject()
+    try {
+      console.log('📡 [ModernEditProject] Récupération du projet depuis Firestore...')
+      const projectDoc = await getDoc(doc(firestore, 'projects', projectId))
+      
+      if (projectDoc.exists()) {
+        console.log('✅ [ModernEditProject] Projet trouvé dans Firestore')
+        const projectData = projectDoc.data()
+        console.log('📊 [ModernEditProject] Données du projet:', projectData)
+        
+        const project = {
+          id: projectDoc.id,
+          name: projectData.name || 'Projet sans nom',
+          description: projectData.description || '',
+          html: projectData.html || '',
+          css: projectData.css || '',
+          js: projectData.js || '',
+          createdAt: projectData.createdAt?.toDate() || new Date(),
+          updatedAt: projectData.updatedAt?.toDate() || new Date(),
+          tags: projectData.tags || []
+        }
+        
+        console.log('🏗️ [ModernEditProject] Projet construit:', project)
+        console.log('💾 [ModernEditProject] Appel de setCurrentProject...')
+        setCurrentProject(project)
+        
+        console.log('📝 [ModernEditProject] Mise à jour des onglets...')
+        // Mettre à jour les onglets avec le contenu du projet
+        updateTabContent('html', project.html)
+        updateTabContent('css', project.css)
+        updateTabContent('js', project.js)
+        setActiveTab('html')
+        
+        console.log('✅ [ModernEditProject] Projet chargé avec succès')
+      } else {
+        console.log('❌ [ModernEditProject] Projet non trouvé dans Firestore')
+        toast.error('Projet non trouvé')
+        navigate('/projectlist')
+      }
+    } catch (error) {
+      console.error('❌ [ModernEditProject] Erreur lors du chargement du projet:', error)
+      toast.error('Erreur lors du chargement du projet')
+      navigate('/projectlist')
+    } finally {
+      console.log('🏁 [ModernEditProject] Fin du chargement, isLoading = false')
+      setIsLoading(false)
+    }
   }, [projectId, currentUser, setCurrentProject, updateTabContent, setActiveTab, navigate])
+
+  useEffect(() => {
+    console.log('🔄 [ModernEditProject] useEffect déclenché')
+    loadProject()
+  }, [loadProject])
 
   const handleSave = async () => {
     if (!currentProject) return
@@ -90,6 +123,7 @@ const ModernEditProject = () => {
   }
 
   if (isLoading) {
+    console.log('⏳ [ModernEditProject] Affichage du LoadingSpinner')
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" text="Chargement du projet..." />
@@ -98,6 +132,7 @@ const ModernEditProject = () => {
   }
 
   if (!currentProject) {
+    console.log('❌ [ModernEditProject] currentProject est null, affichage de l\'erreur')
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -113,6 +148,8 @@ const ModernEditProject = () => {
     )
   }
 
+  console.log('🎯 [ModernEditProject] Rendu de l\'éditeur avec le projet:', currentProject)
+  
   return (
     <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
       {/* Header */}
