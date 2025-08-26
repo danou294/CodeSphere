@@ -44,7 +44,7 @@ const defaultUISettings = {
 
 export const useUIStore = create<UIState>()(
   devtools(
-    (set, get) => ({
+    (set, _get) => ({
       ...defaultUISettings,
 
       toggleSidebar: () => {

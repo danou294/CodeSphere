@@ -39,7 +39,7 @@ const defaultProject: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> = {
 export const useProjectsStore = create<ProjectsState>()(
   devtools(
     persist(
-      (set, get) => ({
+      (set, _get) => ({
         projects: [],
         currentProject: null,
         isLoading: false,

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { motion } from 'framer-motion'
 import { ArrowRight, Sparkles, Play, Download } from 'lucide-react'
 

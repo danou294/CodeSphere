@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
 import { useAuth } from '../Contexts/AuthContext.jsx'
@@ -13,7 +13,7 @@ import {
   ArrowRight,
   Rocket,
   Users,
-  Clock,
+
   Globe,
   Code2,
   Bot
@@ -68,7 +68,7 @@ const PremiumOffer = () => {
       
     } catch (error) {
       console.error('❌ [CHECKOUT] Erreur complète:', error)
-      console.error('❌ [CHECKOUT] Stack trace:', error.stack)
+      console.error('❌ [CHECKOUT] Stack trace:', (error as any).stack)
       toast.error(
         'Échec du démarrage du processus de paiement. Veuillez réessayer plus tard.'
       )

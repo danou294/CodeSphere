@@ -201,19 +201,19 @@ export const useNotifications = () => {
 }
 
 // Composants de notification rapides
-export const showSuccess = (title: string, message?: string) => {
+export const showSuccess = (_title: string, _message?: string) => {
   // Implémentation pour afficher une notification de succès
 }
 
-export const showError = (title: string, message?: string) => {
+export const showError = (_title: string, _message?: string) => {
   // Implémentation pour afficher une notification d'erreur
 }
 
-export const showWarning = (title: string, message?: string) => {
+export const showWarning = (_title: string, _message?: string) => {
   // Implémentation pour afficher une notification d'avertissement
 }
 
-export const showInfo = (title: string, message?: string) => {
+export const showInfo = (_title: string, _message?: string) => {
   // Implémentation pour afficher une notification d'information
 }
 
