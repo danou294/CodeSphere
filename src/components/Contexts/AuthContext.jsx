@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect, createContext } from 'react'
 import { auth } from '../../firebaseConfig' // Assurez-vous que le chemin est correct
 import { onAuthStateChanged, signOut } from 'firebase/auth' // Importer signOut
+import { useSessionPersistence } from '../../hooks/useSessionPersistence'
 
 const AuthContext = createContext()
 
@@ -12,6 +13,9 @@ export function useAuth() {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  // Utiliser le hook de persistance de session
+  useSessionPersistence()
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

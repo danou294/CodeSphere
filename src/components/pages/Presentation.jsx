@@ -27,28 +27,28 @@ const Bot = ({ className }) => (
 const Presentation = () => {
   const features = [
     {
+      icon: Code2,
+      title: "Éditeur Monaco Professionnel",
+      description: "L'éditeur de code le plus puissant avec coloration syntaxique, autocomplétion et debugging intégré.",
+      color: "from-blue-500 to-indigo-500"
+    },
+    {
+      icon: Bot,
+      title: "Assistant IA Premium",
+      description: "Chatbot intelligent avec support Markdown, génération de code et conversations illimitées.",
+      color: "from-purple-500 to-pink-500"
+    },
+    {
       icon: Zap,
-      title: "Édition en Temps Réel",
-      description: "Prévisualisez vos changements instantanément avec notre éditeur Monaco avancé.",
+      title: "Preview Instantané",
+      description: "Voyez vos changements instantanément avec notre système de preview ultra-rapide.",
       color: "from-yellow-500 to-orange-500"
     },
     {
       icon: Shield,
-      title: "Interface Intuitive",
-      description: "Profitez d'une interface propre et facile à utiliser, conçue pour tous les niveaux.",
+      title: "Sauvegarde Sécurisée",
+      description: "Vos projets sont sauvegardés automatiquement dans Firebase avec une sécurité maximale.",
       color: "from-green-500 to-emerald-500"
-    },
-    {
-      icon: Rocket,
-      title: "Gestion des Versions",
-      description: "Restez maître de votre historique de développement avec notre système de versions.",
-      color: "from-blue-500 to-indigo-500"
-    },
-    {
-      icon: Globe,
-      title: "Accessibilité",
-      description: "Codez de n'importe où, sur n'importe quel appareil connecté à Internet.",
-      color: "from-purple-500 to-pink-500"
     }
   ]
 
@@ -56,22 +56,22 @@ const Presentation = () => {
     {
       icon: Users,
       title: "Collaboration en Temps Réel",
-      description: "Travaillez en équipe, partout dans le monde avec des outils avancés."
+      description: "Travaillez en équipe avec édition simultanée, chat intégré et partage de sessions en direct."
+    },
+    {
+      icon: Globe,
+      title: "Déploiement Automatique",
+      description: "Déployez vos projets directement vers Vercel, Netlify ou GitHub Pages en un clic."
     },
     {
       icon: TrendingUp,
-      title: "Analyses et Statistiques",
-      description: "Suivez votre progression et vos performances de codage en détail."
+      title: "Analytics Avancées",
+      description: "Suivez vos performances de codage, temps de développement et productivité avec des métriques détaillées."
     },
     {
-      icon: Code2,
-      title: "Intégrations API",
-      description: "Connectez CodeSphere à vos outils préférés pour une productivité accrue."
-    },
-    {
-      icon: Bot,
-      title: "Assistant de Codage AI",
-      description: "Un assistant personnel pour optimiser votre écriture de code."
+      icon: Award,
+      title: "Marketplace d'Extensions",
+      description: "Installez des extensions personnalisées pour étendre les capacités de votre environnement de développement."
     }
   ]
 

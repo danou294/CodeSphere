@@ -1,24 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { getMySubscription } from '../services/userService';
+import React from 'react';
+import { useUserPremiumStatus } from '../hooks/useUserPremiumStatus';
 
 const withSubscriptionCheck = (Wrapped) => {
   return (props) => {
-    const [allowed, setAllowed] = useState(null);
+    const { isPremium, isLoading } = useUserPremiumStatus();
 
-    useEffect(() => {
-      (async () => {
-        try {
-          const sub = await getMySubscription();
-          setAllowed(!!sub.active);
-        } catch (e) {
-          console.error("subscription check failed", e);
-          setAllowed(false);
-        }
-      })();
-    }, []);
-
-    if (allowed === null) return null; // Loader si tu veux
-    if (!allowed) return <div className="p-6 text-center">Offre Premium requise</div>;
+    if (isLoading) return null; // Loader
+    if (!isPremium) return <div className="p-6 text-center">Offre Premium requise</div>;
     return <Wrapped {...props} />;
   };
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Save, Play, Share2, Code2 } from 'lucide-react'
+import { ArrowLeft, Play, Share2, Code2 } from 'lucide-react'
 import { doc, getDoc } from 'firebase/firestore'
 import { firestore } from '../../../firebaseConfig'
 import { useAuth } from '../../Contexts/AuthContext'
@@ -22,7 +22,6 @@ const ModernEditProject = () => {
   const projectId = paramsProjectId || location.pathname.split('/').pop()
   
   const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
 
   console.log('🔍 [ModernEditProject] Rendu du composant')
   console.log('🔍 [ModernEditProject] URL actuelle:', window.location.href)
@@ -97,26 +96,6 @@ const ModernEditProject = () => {
     loadProject()
   }, [loadProject])
 
-  const handleSave = async () => {
-    if (!currentProject) return
-
-    setIsSaving(true)
-    try {
-      // Ici vous pourriez ajouter la logique de sauvegarde Firebase
-      // Pour l'instant, on utilise juste le store Zustand
-      await updateProject(currentProject.id, {
-        ...currentProject,
-        updatedAt: new Date()
-      })
-      
-      toast.success('Projet sauvegardé avec succès!')
-    } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error)
-      toast.error('Erreur lors de la sauvegarde')
-    } finally {
-      setIsSaving(false)
-    }
-  }
 
   const handleBack = () => {
     navigate('/projectlist')
@@ -183,20 +162,6 @@ const ModernEditProject = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="btn-primary"
-              title="Sauvegarder"
-            >
-              {isSaving ? (
-                <LoadingSpinner size="sm" />
-              ) : (
-                <Save className="w-4 h-4 mr-2" />
-              )}
-              Sauvegarder
-            </button>
-            
             <button className="btn-secondary" title="Prévisualiser">
               <Play className="w-4 h-4 mr-2" />
               Aperçu
@@ -212,10 +177,40 @@ const ModernEditProject = () => {
       {/* IDE */}
       <div className="h-[calc(100vh-80px)]">
         <ModernIDE 
-          project={currentProject}
-          onContentChange={(type, content) => {
-            updateTabContent(type, content)
-            updateProject(currentProject.id, { [type]: content })
+          initialCode={{
+            html: currentProject.html || '',
+            css: currentProject.css || '',
+            js: currentProject.js || ''
+          }}
+          projectName={currentProject.name}
+          onContentChange={async (type, content) => {
+            // Mise à jour automatique du projet en temps réel
+            console.log('🔄 [EDIT] Modification détectée:', { type, content: content.substring(0, 50) + '...' })
+            try {
+              await updateProject(currentProject.id, {
+                ...currentProject,
+                [type]: content,
+                updatedAt: new Date()
+              })
+              console.log('✅ [EDIT] Projet mis à jour automatiquement')
+            } catch (error) {
+              console.error('❌ [EDIT] Erreur lors de la mise à jour automatique:', error)
+            }
+          }}
+          onSave={async (code) => {
+            try {
+              await updateProject(currentProject.id, {
+                ...currentProject,
+                html: code.html,
+                css: code.css,
+                js: code.js,
+                updatedAt: new Date()
+              })
+              toast.success('Projet sauvegardé avec succès!')
+            } catch (error) {
+              console.error('Erreur lors de la sauvegarde:', error)
+              toast.error('Erreur lors de la sauvegarde')
+            }
           }}
         />
       </div>

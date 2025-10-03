@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
@@ -17,6 +17,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = (() => { try { return getAnalytics(app); } catch { return null; } })();
 const auth = getAuth(app);
+
+// Configuration de la persistance pour éviter les déconnexions automatiques
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error('Erreur lors de la configuration de la persistance:', error);
+});
+
 const firestore = getFirestore(app);
 
 export { app, analytics, auth, firestore };

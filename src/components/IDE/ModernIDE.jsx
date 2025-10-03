@@ -14,9 +14,12 @@ import {
   Zap,
   Sparkles,
   Crown,
+  Bot,
+  MessageCircle,
   X
 } from 'lucide-react'
 import Editor from '@monaco-editor/react'
+import { useUserPremiumStatus } from '../../hooks/useUserPremiumStatus'
 
 const ModernIDE = ({
   initialCode = {
@@ -29,14 +32,20 @@ const ModernIDE = ({
   project,
   onContentChange
 }) => {
+  const { isPremium } = useUserPremiumStatus()
   const [activeTab, setActiveTab] = useState('html')
   const [code, setCode] = useState(initialCode)
   const [preview, setPreview] = useState('')
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showChatbot, setShowChatbot] = useState(false)
   const [theme, setTheme] = useState('vs-dark')
   const [fontSize, setFontSize] = useState(14)
-  const [autoSave, setAutoSave] = useState(true)
+  const [autoSave, setAutoSave] = useState(() => {
+    // Récupérer la préférence depuis localStorage, défaut à true
+    const saved = localStorage.getItem('codesphere-autosave')
+    return saved !== null ? JSON.parse(saved) : true
+  })
   const [editorWidth, setEditorWidth] = useState(60)
   const [isResizing, setIsResizing] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -133,19 +142,46 @@ const ModernIDE = ({
 
   const handleCodeChange = (value, language) => {
     if (value !== undefined) {
-      setCode(prev => ({
-        ...prev,
+      const newCode = {
+        ...code,
         [language]: value
-      }))
+      }
+      setCode(newCode)
+      
+      // Appeler le callback pour notifier les changements SEULEMENT si auto-sauvegarde activée
+      if (onContentChange && autoSave) {
+        onContentChange(language, value)
+        console.log('🔄 [IDE] Code modifié + Auto-sauvegarde:', { language, value: value.substring(0, 50) + '...' })
+      } else if (!autoSave) {
+        console.log('🔄 [IDE] Code modifié (sans auto-sauvegarde):', { language, value: value.substring(0, 50) + '...' })
+      }
     }
   }
 
+  const handleAutoSaveToggle = (checked) => {
+    setAutoSave(checked)
+    // Sauvegarder la préférence dans localStorage
+    localStorage.setItem('codesphere-autosave', JSON.stringify(checked))
+    console.log('💾 [IDE] Préférence auto-sauvegarde sauvegardée:', checked)
+  }
+
   const handleSave = () => {
+    console.log('💾 [IDE] Bouton de sauvegarde manuelle cliqué')
+    
     if (onSave) {
+      console.log('💾 [IDE] Appel de onSave avec le code:', { 
+        html: code.html.substring(0, 50) + '...',
+        css: code.css.substring(0, 50) + '...',
+        js: code.js.substring(0, 50) + '...'
+      })
       onSave(code)
+    } else {
+      console.log('⚠️ [IDE] onSave non défini - sauvegarde locale uniquement')
     }
+    
+    // Sauvegarde locale de secours
     localStorage.setItem('codesphere-project-gratuit', JSON.stringify(code))
-    console.log('💾 Projet sauvegardé localement')
+    console.log('💾 [IDE] Projet sauvegardé localement')
   }
 
   const handleReset = () => {
@@ -223,6 +259,18 @@ const ModernIDE = ({
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleSave}
+              className="btn-primary px-3 py-2 text-sm font-semibold flex items-center space-x-2"
+              title="Sauvegarder manuellement"
+            >
+              <Zap className="w-4 h-4" />
+              <span className="hidden md:inline">Sauvegarder</span>
+            </motion.button>
+
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={toggleFullscreen}
               className="btn-ghost p-2 text-surface-600 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100 hidden md:block"
             >
@@ -241,21 +289,24 @@ const ModernIDE = ({
         </div>
       </motion.header>
 
-      {/* Premium Banner */}
-      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 px-4 md:px-6 py-2 md:py-3 text-center relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-2 text-white font-medium text-sm md:text-base">
-          <div className="flex items-center space-x-2">
-            <Crown className="w-4 h-4" />
-            <span>Version Gratuite : Éditeur + Preview</span>
+      {/* Premium Banner - Masquée pour les utilisateurs premium */}
+      {!isPremium && (
+        <div className="bg-gradient-to-r from-yellow-400 to-orange-500 px-4 md:px-6 py-2 md:py-3 text-center relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-2 text-white font-medium text-sm md:text-base">
+            <div className="flex items-center space-x-2">
+              <Crown className="w-4 h-4" />
+              <span>Version Gratuite : Éditeur + Preview</span>
+            </div>
+            <a 
+              href="/premium-offer" 
+              className="bg-white text-orange-600 px-3 py-1 rounded-full text-sm font-semibold hover:bg-orange-50 transition-colors"
+            >
+              Passer Premium
+            </a>
           </div>
-          <a 
-            href="/premium-offer" 
-            className="bg-white text-orange-600 px-3 py-1 rounded-full text-sm font-semibold hover:bg-orange-50 transition-colors"
-          >
-            Passer Premium
-          </a>
         </div>
-      </div>
+      )}
+
 
       {/* Mobile Navigation Tabs */}
       {isMobile && (
@@ -582,7 +633,7 @@ const ModernIDE = ({
                       type="checkbox"
                       id="autoSave"
                       checked={autoSave}
-                      onChange={(e) => setAutoSave(e.target.checked)}
+                      onChange={(e) => handleAutoSaveToggle(e.target.checked)}
                       className="rounded"
                     />
                     <label htmlFor="autoSave" className="text-sm font-medium text-surface-700 dark:text-surface-300">
@@ -614,13 +665,25 @@ const ModernIDE = ({
                 <span>Auto-sauvegarde</span>
               </div>
             )}
-            <span className="text-green-600 font-medium">✓ Version Gratuite</span>
+            {!autoSave && (
+              <div className="flex items-center space-x-1">
+                <Zap className="w-3 h-3 text-gray-400" />
+                <span className="text-gray-500">Auto-sauvegarde désactivée</span>
+              </div>
+            )}
+            {!isPremium && <span className="text-green-600 font-medium">✓ Version Gratuite</span>}
+            {isPremium && <span className="text-purple-600 font-medium">✓ Version Premium</span>}
           </div>
           
           <div className="flex items-center space-x-2">
             <span className="text-surface-500">
               CodeSphere IDE Gratuit • {isMobile ? 'Mobile' : 'Desktop'} • Éditeur + Preview
             </span>
+            {!autoSave && (
+              <span className="text-orange-500 font-medium">
+                ⚠️ Auto-sauvegarde désactivée
+              </span>
+            )}
           </div>
         </div>
       </motion.footer>
@@ -701,7 +764,7 @@ const ModernIDE = ({
                         type="checkbox"
                         id="autoSave"
                         checked={autoSave}
-                        onChange={(e) => setAutoSave(e.target.checked)}
+                        onChange={(e) => handleAutoSaveToggle(e.target.checked)}
                         className="rounded w-4 h-4"
                       />
                       <label htmlFor="autoSave" className="text-sm font-medium text-surface-700 dark:text-surface-300">
@@ -731,6 +794,110 @@ const ModernIDE = ({
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* Bouton Chatbot Flottant Permanent */}
+      {!showChatbot && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setShowChatbot(true)}
+          className={`fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full shadow-lg transition-all duration-200 ${
+            isPremium 
+              ? 'bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-purple-500/25' 
+              : 'bg-gray-400 text-white cursor-not-allowed opacity-60'
+          }`}
+          disabled={!isPremium}
+          title={isPremium ? "Ouvrir l'Assistant IA" : "Accès Premium requis"}
+        >
+          <Bot className="w-6 h-6 mx-auto" />
+          {isPremium && (
+            <motion.div
+              className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full"
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.7, 1, 0.7]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          )}
+        </motion.button>
+      )}
+
+      {/* Chatbot Flottant */}
+      <AnimatePresence>
+        {showChatbot && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            className="fixed bottom-6 right-6 z-50 w-80 max-w-[calc(100vw-2rem)]"
+          >
+            <div className="bg-white dark:bg-surface-900 rounded-2xl shadow-2xl border border-surface-200 dark:border-surface-700 overflow-hidden">
+              {/* Header du Chatbot */}
+              <div className="bg-gradient-to-r from-purple-500 to-pink-600 px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                    <Bot className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold text-sm">Assistant IA</h3>
+                    <p className="text-white/80 text-xs">CodeSphere</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowChatbot(false)}
+                  className="text-white/80 hover:text-white transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Contenu du Chatbot */}
+              <div className="p-4">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-3 mb-4">
+                  <div className="flex items-start space-x-2">
+                    <Bot className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-surface-700 dark:text-surface-300 mb-2">
+                        Bonjour ! Je peux vous aider avec :
+                      </p>
+                      <ul className="text-xs text-surface-600 dark:text-surface-400 space-y-1">
+                        <li>• Optimisation de code</li>
+                        <li>• Correction d'erreurs</li>
+                        <li>• Suggestions d'amélioration</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <button
+                    onClick={() => window.open('/chat', '_blank')}
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white py-2.5 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Ouvrir le Chat Complet</span>
+                  </button>
+                  
+                  <button
+                    onClick={() => window.open('/premium-offer', '_blank')}
+                    className="w-full border border-purple-300 dark:border-purple-600 text-purple-600 dark:text-purple-400 py-2.5 px-4 rounded-lg font-semibold hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200"
+                  >
+                    Passer Premium
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

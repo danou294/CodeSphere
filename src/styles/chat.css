@@ -1,0 +1,171 @@
+/* Styles personnalisés pour le chat ChatGPT-like */
+
+/* Scrollbar personnalisée */
+.chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 3px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+/* Animation de pulsation pour l'indicateur de frappe */
+@keyframes pulse-dot {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.typing-dot {
+  animation: pulse-dot 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+/* Effet de brillance pour les messages */
+.message-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Animation d'apparition des messages */
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-slide-in {
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+/* Effet de focus pour l'input */
+.chat-input:focus-within {
+  box-shadow: 0 0 0 1px rgba(156, 163, 175, 0.3);
+  border-color: rgba(156, 163, 175, 0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Animation pour le bouton d'envoi */
+.send-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.send-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.send-button:active {
+  transform: translateY(0);
+}
+
+/* Styles pour le mode sombre */
+.dark .chat-input {
+  background-color: rgba(31, 41, 55, 0.8);
+  border-color: rgba(75, 85, 99, 0.3);
+}
+
+.dark .chat-input:focus-within {
+  box-shadow: 0 0 0 1px rgba(75, 85, 99, 0.5);
+  border-color: rgba(75, 85, 99, 0.7);
+}
+
+.dark .message-glow {
+  box-shadow: 0 0 20px rgba(147, 197, 253, 0.1);
+}
+
+/* Animation de chargement sophistiquée */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .loading-shimmer {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200px 100%;
+}
+
+/* Effet de gradient animé pour les avatars */
+.avatar-gradient {
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Responsive design pour mobile */
+@media (max-width: 768px) {
+  .chat-container {
+    padding: 1rem;
+  }
+  
+  .message-bubble {
+    max-width: 85%;
+  }
+  
+  .chat-input {
+    padding: 0.75rem;
+  }
+}
+
+/* Animation de notification */
+@keyframes notificationSlide {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification-slide {
+  animation: notificationSlide 0.3s ease-out;
+}

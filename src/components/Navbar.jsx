@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './Contexts/AuthContext.jsx'
 import { toast } from 'react-toastify'
-import { getMySubscription } from '../services/userService'
+import { useUserPremiumStatus } from '../hooks/useUserPremiumStatus'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Menu, 
@@ -21,38 +21,8 @@ import { SimpleThemeToggle } from './ui/ThemeToggle'
 const Navbar = () => {
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
-  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
+  const { isPremium, isLoading: premiumLoading } = useUserPremiumStatus()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    if (currentUser) {
-      checkSubscriptionStatus()
-    }
-  }, [currentUser])
-
-  const checkSubscriptionStatus = async () => {
-    try {
-      const subscription = await getMySubscription()
-      setSubscriptionStatus(subscription)
-    } catch (error) {
-      console.error('Erreur lors de la vérification du statut premium:', error)
-      
-      // Gestion spécifique des erreurs d'authentification
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        console.warn('Token expiré, tentative de reconnexion...')
-        // Le service HTTP va automatiquement retenter avec un nouveau token
-        // Si ça échoue encore, on peut rediriger vers la connexion
-        try {
-          const retrySubscription = await getMySubscription()
-          setSubscriptionStatus(retrySubscription)
-        } catch (retryError) {
-          console.error('Échec de la nouvelle tentative:', retryError)
-          // Optionnel : rediriger vers la page de connexion
-          // navigate('/login')
-        }
-      }
-    }
-  }
 
   const handleLogout = async () => {
     try {
@@ -130,7 +100,7 @@ const Navbar = () => {
             {/* Auth Buttons - Responsive */}
             {currentUser ? (
               <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
-                {subscriptionStatus?.active && (
+                {isPremium && (
                   <motion.span 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -254,7 +224,7 @@ const Navbar = () => {
               {/* Auth Section */}
               {currentUser ? (
                 <div className="space-y-4 pt-2 border-t border-surface-200/50 dark:border-surface-800/50">
-                  {subscriptionStatus?.active && (
+                  {isPremium && (
                     <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-3 rounded-xl text-center font-medium flex items-center justify-center space-x-2">
                       <Crown className="w-5 h-5" />
                       <span>💎 Premium</span>

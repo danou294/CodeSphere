@@ -43,25 +43,25 @@ const Footer = () => {
   const socialLinks = [
     { 
       name: "GitHub", 
-      href: "https://github.com", 
+      href: "https://github.com/danou294", 
       icon: Github,
       color: "hover:text-gray-700 dark:hover:text-gray-300"
     },
     { 
       name: "Twitter", 
-      href: "https://twitter.com", 
+      href: "https://twitter.com/danlev29", 
       icon: Twitter,
       color: "hover:text-blue-500 dark:hover:text-blue-400"
     },
     { 
       name: "LinkedIn", 
-      href: "https://linkedin.com", 
+      href: "https://www.linkedin.com/in/daniellevy2904/", 
       icon: Linkedin,
       color: "hover:text-blue-600 dark:hover:text-blue-500"
     },
     { 
       name: "Email", 
-      href: "mailto:contact@codesphere.fr", 
+      href: "mailto:danielevy29@gmail.com", 
       icon: Mail,
       color: "hover:text-red-500 dark:hover:text-red-400"
     }
