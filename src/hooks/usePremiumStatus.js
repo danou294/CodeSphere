@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../components/Contexts/AuthContext'
 import { firestore } from '../firebaseConfig'
-import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import firebase from 'firebase/app'
 
 export const usePremiumStatus = () => {
   const { currentUser } = useAuth()
@@ -19,8 +19,8 @@ export const usePremiumStatus = () => {
         console.log('🔍 [PREMIUM CHECK] Vérification statut premium pour:', currentUser.uid)
         
         // Récupérer les données utilisateur depuis Firebase
-        const userRef = doc(firestore, 'users', currentUser.uid)
-        const userDoc = await getDoc(userRef)
+        const userRef = firestore.collection('users').doc(currentUser.uid)
+        const userDoc = await userRef.get()
         
         if (userDoc.exists()) {
           const userData = userDoc.data()
@@ -40,11 +40,11 @@ export const usePremiumStatus = () => {
               console.log('🔍 [PREMIUM CHECK] Paiement détecté, mise à jour du statut...')
               
               // Mettre à jour le statut premium dans Firebase
-              await updateDoc(userRef, {
+              await userRef.update({
                 hasPaidForChatbot: true,
                 premiumStatus: 'active',
                 stripeSessionId: sessionId,
-                premiumActivatedAt: serverTimestamp()
+                premiumActivatedAt: firebase.firestore.FieldValue.serverTimestamp()
               })
               
               console.log('✅ [PREMIUM CHECK] Statut premium mis à jour avec succès')

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../components/Contexts/AuthContext'
 import { firestore } from '../firebaseConfig'
-import { doc, getDoc } from 'firebase/firestore'
 
 export const useUserPremiumStatus = () => {
   const { currentUser } = useAuth()
@@ -16,8 +15,8 @@ export const useUserPremiumStatus = () => {
       }
 
       try {
-        const userRef = doc(firestore, 'users', currentUser.uid)
-        const userDoc = await getDoc(userRef)
+        const userRef = firestore.collection('users').doc(currentUser.uid)
+        const userDoc = await userRef.get()
         
         if (userDoc.exists()) {
           const userData = userDoc.data()

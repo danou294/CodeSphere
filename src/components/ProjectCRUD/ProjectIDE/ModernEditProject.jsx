@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Play, Share2, Code2 } from 'lucide-react'
-import { doc, getDoc } from 'firebase/firestore'
 import { firestore } from '../../../firebaseConfig'
 import { useAuth } from '../../Contexts/AuthContext'
 import { useProjectsStore, useTabsStore } from '../../../store'
@@ -45,7 +44,7 @@ const ModernEditProject = () => {
 
     try {
       console.log('📡 [ModernEditProject] Récupération du projet depuis Firestore...')
-      const projectDoc = await getDoc(doc(firestore, 'projects', projectId))
+      const projectDoc = await firestore.collection('projects').doc(projectId).get()
       
       if (projectDoc.exists()) {
         console.log('✅ [ModernEditProject] Projet trouvé dans Firestore')

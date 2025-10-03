@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,15 +14,16 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-const analytics = (() => { try { return getAnalytics(app); } catch { return null; } })();
-const auth = getAuth(app);
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const analytics = (() => { try { return firebase.analytics(); } catch { return null; } })();
+const auth = firebase.auth();
 
 // Configuration de la persistance pour éviter les déconnexions automatiques
-setPersistence(auth, browserLocalPersistence).catch((error) => {
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch((error) => {
   console.error('Erreur lors de la configuration de la persistance:', error);
 });
 
-const firestore = getFirestore(app);
+const firestore = firebase.firestore();
 
 export { app, analytics, auth, firestore };

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuth } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // ex: https://api.codesphere.fr/api
@@ -7,7 +7,6 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  const auth = getAuth();
   const user = auth.currentUser;
   if (user) {
     try {
@@ -29,7 +28,6 @@ api.interceptors.response.use(
     if (err?.response?.status === 401 || err?.response?.status === 403) {
       console.warn("Token expiré ou invalide, tentative de renouvellement...");
       
-      const auth = getAuth();
       const user = auth.currentUser;
       
       if (user) {

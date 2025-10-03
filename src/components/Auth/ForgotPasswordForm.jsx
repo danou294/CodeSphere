@@ -1,7 +1,6 @@
 // ForgotPasswordForm.jsx
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '../../firebaseConfig'
 import { toast } from 'react-toastify'
 import { 
@@ -24,7 +23,7 @@ function ForgotPasswordForm() {
     e.preventDefault()
     setIsLoading(true)
     try {
-      await sendPasswordResetEmail(auth, email)
+      await auth.sendPasswordResetEmail(email)
       setIsSuccess(true)
       toast.success('✅ Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.')
     } catch (error) {

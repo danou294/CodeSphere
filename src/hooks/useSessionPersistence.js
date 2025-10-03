@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { auth } from '../firebaseConfig'
-import { onIdTokenChanged } from 'firebase/auth'
 
 /**
  * Hook pour gérer la persistance de session Firebase
@@ -8,7 +7,7 @@ import { onIdTokenChanged } from 'firebase/auth'
  */
 export const useSessionPersistence = () => {
   useEffect(() => {
-    const unsubscribe = onIdTokenChanged(auth, async (user) => {
+    const unsubscribe = auth.onIdTokenChanged(async (user) => {
       if (user) {
         try {
           // Rafraîchir le token toutes les 50 minutes (avant expiration à 1h)

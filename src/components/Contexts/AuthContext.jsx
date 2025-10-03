@@ -1,7 +1,6 @@
 // src/Contexts/AuthContext.jsx
 import React, { useContext, useState, useEffect, createContext } from 'react'
 import { auth } from '../../firebaseConfig' // Assurez-vous que le chemin est correct
-import { onAuthStateChanged, signOut } from 'firebase/auth' // Importer signOut
 import { useSessionPersistence } from '../../hooks/useSessionPersistence'
 
 const AuthContext = createContext()
@@ -18,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   useSessionPersistence()
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user)
       setLoading(false)
     })
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await signOut(auth)
+      await auth.signOut()
       setCurrentUser(null) // Réinitialise l'utilisateur actuel après déconnexion
     } catch (error) {
       console.error('Erreur lors de la déconnexion : ', error)
