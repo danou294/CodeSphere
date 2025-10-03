@@ -175,10 +175,40 @@ const ModernEditProject: React.FC = () => {
       {/* IDE */}
       <div className="h-[calc(100vh-80px)]">
         <ModernIDE 
-          project={currentProject}
-          onContentChange={(type, content) => {
-            updateTabContent(type as 'html' | 'css' | 'js', content)
-            updateProject(currentProject.id, { [type]: content })
+          initialCode={{
+            html: currentProject.html || '',
+            css: currentProject.css || '',
+            js: currentProject.js || ''
+          }}
+          projectName={currentProject.name}
+          onCodeChange={async (code) => {
+            // Mise à jour automatique du projet en temps réel
+            try {
+              await updateProject(currentProject.id, {
+                ...currentProject,
+                html: code.html,
+                css: code.css,
+                js: code.js,
+                updatedAt: new Date()
+              })
+            } catch (error) {
+              console.error('Erreur lors de la mise à jour automatique:', error)
+            }
+          }}
+          onSave={async (code) => {
+            try {
+              await updateProject(currentProject.id, {
+                ...currentProject,
+                html: code.html,
+                css: code.css,
+                js: code.js,
+                updatedAt: new Date()
+              })
+              toast.success('Projet sauvegardé avec succès!')
+            } catch (error) {
+              console.error('Erreur lors de la sauvegarde:', error)
+              toast.error('Erreur lors de la sauvegarde')
+            }
           }}
         />
       </div>

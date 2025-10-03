@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
+import { doc, updateDoc } from 'firebase/firestore'
+import { firestore } from '../firebaseConfig'
 
 export interface Project {
   id: string
@@ -20,7 +22,7 @@ interface ProjectsState {
   
   // Actions
   createProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => void
-  updateProject: (id: string, updates: Partial<Project>) => void
+  updateProject: (id: string, updates: Partial<Project>) => Promise<void>
   deleteProject: (id: string) => void
   setCurrentProject: (project: Project | null) => void
   loadProjects: () => void
@@ -59,17 +61,53 @@ export const useProjectsStore = create<ProjectsState>()(
           }))
         },
 
-        updateProject: (id, updates) => {
-          set((state) => ({
-            projects: state.projects.map(project =>
-              project.id === id 
-                ? { ...project, ...updates, updatedAt: new Date() }
-                : project
-            ),
-            currentProject: state.currentProject?.id === id
-              ? { ...state.currentProject, ...updates, updatedAt: new Date() }
-              : state.currentProject
-          }))
+        updateProject: async (id, updates) => {
+          console.log('🔄 [STORE] updateProject appelé:', { id, updates })
+          try {
+            // Sauvegarder dans Firebase
+            console.log('📡 [STORE] Tentative de sauvegarde Firebase...')
+            const projectRef = doc(firestore, 'projects', id)
+            console.log('📡 [STORE] Référence Firebase créée:', projectRef.path)
+            
+            await updateDoc(projectRef, {
+              ...updates,
+              updatedAt: new Date()
+            })
+            
+            console.log('✅ [STORE] Projet mis à jour dans Firebase:', id)
+            
+            // Mettre à jour le store local
+            set((state) => ({
+              projects: state.projects.map(project =>
+                project.id === id 
+                  ? { ...project, ...updates, updatedAt: new Date() }
+                  : project
+              ),
+              currentProject: state.currentProject?.id === id
+                ? { ...state.currentProject, ...updates, updatedAt: new Date() }
+                : state.currentProject
+            }))
+            
+            console.log('✅ [STORE] Store local mis à jour')
+          } catch (error) {
+            console.error('❌ [STORE] Erreur lors de la mise à jour Firebase:', error)
+            console.error('❌ [STORE] Détails de l\'erreur:', error.message)
+            console.error('❌ [STORE] Code d\'erreur:', error.code)
+            
+            // Mettre à jour quand même le store local en cas d'erreur
+            set((state) => ({
+              projects: state.projects.map(project =>
+                project.id === id 
+                  ? { ...project, ...updates, updatedAt: new Date() }
+                  : project
+              ),
+              currentProject: state.currentProject?.id === id
+                ? { ...state.currentProject, ...updates, updatedAt: new Date() }
+                : state.currentProject
+            }))
+            
+            console.log('⚠️ [STORE] Store local mis à jour malgré l\'erreur Firebase')
+          }
         },
 
         deleteProject: (id) => {

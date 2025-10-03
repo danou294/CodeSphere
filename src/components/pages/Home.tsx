@@ -5,8 +5,7 @@ import {
   Code2, 
   Sparkles, 
   Zap, 
-  Shield, 
-  Globe, 
+  BookOpen, 
   Rocket,
   ArrowRight,
   Play,
@@ -38,16 +37,10 @@ const Home = () => {
       color: "from-contact-500 to-accent-500"
     },
     {
-      icon: Shield,
-      title: "Sécurité Maximale",
-      description: "Votre code est protégé avec les meilleures pratiques de sécurité et de confidentialité.",
-      color: "from-success-500 to-accent-500"
-    },
-    {
-      icon: Globe,
-      title: "Déploiement Facile",
-      description: "Déployez vos projets en un clic vers GitHub, Netlify, Vercel et plus encore.",
-      color: "from-blue-600 to-indigo-600"
+      icon: BookOpen,
+      title: "Apprentissage Interactif",
+      description: "Parfait pour débuter en programmation avec des outils intuitifs et une interface claire.",
+      color: "from-green-500 to-emerald-500"
     },
     {
       icon: Rocket,
@@ -66,25 +59,25 @@ const Home = () => {
 
   const testimonials = [
     {
-      name: "Alexandre Dubois",
+      name: "Samuel Hanein",
       role: "Développeur Full-Stack",
       content: "CodeSphere a révolutionné ma façon de coder. L'assistant AI est incroyablement intelligent !",
       rating: 5,
-      avatar: "AD"
+      avatar: "SH"
     },
     {
-      name: "Marie Laurent",
+      name: "Nathan Toboul",
       role: "Lead Frontend",
       content: "L'éditeur Monaco est parfait et la preview en temps réel m'a fait gagner des heures.",
       rating: 5,
-      avatar: "ML"
+      avatar: "NT"
     },
     {
-      name: "Thomas Moreau",
+      name: "Rivkah Bel Ange",
       role: "Architecte Logiciel",
       content: "La meilleure plateforme de développement que j'ai utilisée. Simple, rapide et puissante.",
       rating: 5,
-      avatar: "TM"
+      avatar: "RB"
     }
   ]
 
@@ -162,8 +155,9 @@ const Home = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => {
+          {/* Première ligne - 3 fonctionnalités */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+            {features.slice(0, 3).map((feature, index) => {
               const Icon = feature.icon
               return (
                 <motion.div
@@ -173,7 +167,7 @@ const Home = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                   whileHover={{ y: -4, scale: 1.01 }}
-                  className="card p-8 text-center group cursor-pointer transition-all duration-150 hover:shadow-xl hover:shadow-gray-200 dark:hover:shadow-gray-800"
+                  className="card p-8 text-center group  transition-all duration-150 hover:shadow-xl hover:shadow-gray-200 dark:hover:shadow-gray-800"
                 >
                   <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-150`}>
                     <Icon className="w-8 h-8 text-white" />
@@ -187,6 +181,36 @@ const Home = () => {
                 </motion.div>
               )
             })}
+          </div>
+
+          {/* Deuxième ligne - 2 fonctionnalités centrées */}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+              {features.slice(3, 5).map((feature, index) => {
+                const Icon = feature.icon
+                return (
+                  <motion.div
+                    key={feature.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: (index + 3) * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -4, scale: 1.01 }}
+                    className="card p-8 text-center group  transition-all duration-150 hover:shadow-xl hover:shadow-gray-200 dark:hover:shadow-gray-800"
+                  >
+                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform duration-150`}>
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-4 text-surface-900 dark:text-white">
+                      {feature.title}
+                    </h3>
+                    <p className="text-surface-700 dark:text-white leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </motion.div>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>

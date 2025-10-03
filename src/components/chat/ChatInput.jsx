@@ -1,34 +1,78 @@
-import React, { useState } from 'react'
-import { addMessage } from '../../services/chatService'
+import React, { useState, useRef, useEffect } from 'react'
+import { addMessage, createConversationWithMessage } from '../../services/chatService'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import Swal from 'sweetalert2' // Pour afficher des alertes
+import { faPaperPlane, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { useAuth } from '../Contexts/AuthContext'
+import { motion } from 'framer-motion'
+import Swal from 'sweetalert2'
+import '../../styles/chat.css'
 
-const ChatInput = ({ sessionId, onNewMessage }) => {
+const ChatInput = ({ sessionId, onNewMessage, onMessageSent, isNewConversation = false }) => {
   const [message, setMessage] = useState('')
+  const [isSending, setIsSending] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const textareaRef = useRef(null)
+  const { currentUser } = useAuth()
 
   const handleSendMessage = async () => {
-    if (message.trim()) {
+    if (message.trim() && !isSending) {
+      const messageToSend = message.trim()
+      setIsSending(true)
+      setIsAnimating(true)
+      
+      // Délai pour l'animation de transition
+      setTimeout(() => {
+        onMessageSent?.(messageToSend) // Notifier que l'envoi commence avec le message
+        setMessage('') // Vider l'input après l'animation
+        setIsAnimating(false)
+      }, 500) // 500ms pour l'animation
+      
+      console.log('📤 [CHAT INPUT] Début envoi message:', { 
+        sessionId, 
+        message: message.substring(0, 50) + '...', 
+        senderId: currentUser?.uid 
+      })
+      
       try {
-        const senderId = 'user-id' // Remplacez par la manière d'obtenir l'ID actuel de l'utilisateur
-        const response = await addMessage(
-          sessionId,
-          message,
-          senderId,
-          true,
-          0.7
-        )
+        const senderId = currentUser?.uid || 'anonymous'
+        let response
+        
+        if (isNewConversation) {
+          console.log('📤 [CHAT INPUT] Création nouvelle conversation avec message:', { message: messageToSend, senderId })
+          response = await createConversationWithMessage(currentUser.uid, messageToSend, senderId)
+          console.log('✅ [CHAT INPUT] Nouvelle conversation créée:', response)
+        } else {
+          console.log('📤 [CHAT INPUT] Ajout message à conversation existante:', { sessionId, message: messageToSend, senderId })
+          response = await addMessage(sessionId, messageToSend, senderId)
+          console.log('✅ [CHAT INPUT] Message ajouté:', response)
+        }
+        
         setMessage('')
         onNewMessage(response) // Mettre à jour l'état des messages après envoi
+        console.log('✅ [CHAT INPUT] Opération réussie')
       } catch (error) {
-        console.error("Erreur lors de l'envoi du message:", error)
-        Swal.fire(
-          'Erreur',
-          "Impossible d'envoyer le message. Veuillez réessayer.",
-          'error'
-        )
+        console.error('❌ [CHAT INPUT] Erreur lors de l\'envoi du message:', error)
+        console.error('❌ [CHAT INPUT] Détails de l\'erreur:', error.response?.data)
+        
+        // Si la session n'existe plus, afficher un message spécifique
+        if (error.response?.data?.error?.includes('No ChatSession matches')) {
+          Swal.fire(
+            'Conversation supprimée',
+            'Cette conversation a été supprimée. Vous allez être redirigé vers la liste des conversations.',
+            'warning'
+          )
+        } else {
+          Swal.fire(
+            'Erreur',
+            "Impossible d'envoyer le message. Veuillez réessayer.",
+            'error'
+          )
+        }
+      } finally {
+        setIsSending(false)
       }
-    } else {
+    } else if (!message.trim()) {
+      console.log('⚠️ [CHAT INPUT] Message vide, envoi annulé')
       Swal.fire(
         'Erreur',
         'Le champ de message ne peut pas être vide.',
@@ -37,22 +81,75 @@ const ChatInput = ({ sessionId, onNewMessage }) => {
     }
   }
 
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [message])
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
+
   return (
-    <div className="flex items-center p-4 bg-gray-700 border-t border-gray-600">
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        className="flex-1 p-2 rounded-lg bg-gray-800 text-white border-none outline-none"
-        placeholder="Tapez votre message..."
-        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-      />
-      <button
-        onClick={handleSendMessage}
-        className="ml-4 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600"
+    <div className="relative">
+      <motion.div 
+        className="flex items-end gap-3 bg-white dark:bg-surface-100 rounded-2xl border border-gray-200 dark:border-surface-800 p-3 shadow-sm chat-input focus-within:border-gray-300 dark:focus-within:border-surface-600 focus-within:ring-0 focus-within:outline-none"
+        animate={isAnimating ? {
+          scale: 0.95,
+          opacity: 0.7,
+          y: -10
+        } : {
+          scale: 1,
+          opacity: 1,
+          y: 0
+        }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
       >
-        <FontAwesomeIcon icon={faPaperPlane} />
-      </button>
+        <textarea
+          ref={textareaRef}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Tapez votre message..."
+          className="flex-1 resize-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:outline-none focus:ring-0 focus:border-none text-sm leading-relaxed max-h-32 min-h-[24px]"
+          rows={1}
+          disabled={isSending}
+        />
+        <motion.button
+          onClick={handleSendMessage}
+          disabled={!message.trim() || isSending}
+          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 send-button ${
+            message.trim() && !isSending
+              ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg hover:shadow-xl'
+              : 'bg-gray-200 dark:bg-surface-200 text-gray-400 cursor-not-allowed'
+          }`}
+          whileHover={message.trim() && !isSending ? { scale: 1.05 } : {}}
+          whileTap={message.trim() && !isSending ? { scale: 0.95 } : {}}
+        >
+          {isSending ? (
+            <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin" />
+          ) : (
+            <FontAwesomeIcon icon={faPaperPlane} className="w-4 h-4" />
+          )}
+        </motion.button>
+      </motion.div>
+      
+      {/* Indicateur de statut */}
+      {isSending && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute -bottom-8 left-0 text-xs text-gray-500 dark:text-gray-400"
+        >
+          Envoi en cours...
+        </motion.div>
+      )}
     </div>
   )
 }

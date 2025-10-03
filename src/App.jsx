@@ -23,12 +23,25 @@ import ForgotPasswordForm from './components/Auth/ForgotPasswordForm.jsx'
 import LogoutButton from './components/Auth/LogoutButton.jsx'
 import ChatSidebar from './components/chat/ChatSidebar.jsx'
 import ChatPanel from './components/chat/ChatPanel.jsx'
+import NewConversation from './components/chat/NewConversation.jsx'
+import { useAuth } from './components/Contexts/AuthContext'
 import ChatButton from './components/chat/ChatButton.jsx'
 import ChatInput from './components/chat/ChatInput.jsx'
 import ChatListItem from './components/chat/ChatListItem.jsx'
 import SubscriptionOverlay from './components/chat/SubscriptionOverlay.jsx'
 import CookieConsent from 'react-cookie-consent'
 import Footer from './components/Footer.jsx'
+
+// Composants wrapper pour passer l'ID utilisateur
+const ChatSidebarWrapper = () => {
+  const { currentUser } = useAuth()
+  return currentUser ? <ChatSidebar participantId={currentUser.uid} /> : <div>Chargement...</div>
+}
+
+const ChatPanelWrapper = () => {
+  const { currentUser } = useAuth()
+  return currentUser ? <ChatPanel participantId={currentUser.uid} /> : <div>Chargement...</div>
+}
 
 function App() {
   return (
@@ -54,8 +67,9 @@ function App() {
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/forgot-password" element={<ForgotPasswordForm />} />
             <Route path="/logout" element={<LogoutButton />} />
-            <Route path="/chat" element={<ChatSidebar />} />
-            <Route path="/chat/:id" element={<ChatPanel />} />
+                <Route path="/chat" element={<ChatSidebarWrapper />} />
+                <Route path="/chat/new" element={<NewConversation />} />
+                <Route path="/chat/:id" element={<ChatPanelWrapper />} />
             <Route path="/chat-button" element={<ChatButton />} />
             <Route path="/chat-input" element={<ChatInput />} />
             <Route path="/chat-list-item" element={<ChatListItem />} />

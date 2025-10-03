@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   listSessions,
   createSession,
@@ -8,7 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2'
 
-const ChatSidebar = ({ participantId, onSelectSession }) => {
+const ChatSidebar = ({ participantId }) => {
+  const navigate = useNavigate()
   const [sessions, setSessions] = useState([])
   const [selectedSession, setSelectedSession] = useState(null)
 
@@ -20,7 +22,8 @@ const ChatSidebar = ({ participantId, onSelectSession }) => {
       }
 
       try {
-        const sessionsData = await listSessions(participantId)
+        const response = await listSessions(participantId)
+        const sessionsData = response.sessions || [] // Extraire le tableau sessions de la réponse
         setSessions(sessionsData)
       } catch (error) {
         console.error('Erreur lors de la récupération des sessions:', error)
@@ -31,13 +34,9 @@ const ChatSidebar = ({ participantId, onSelectSession }) => {
     fetchSessions()
   }, [participantId])
 
-  const handleCreateSession = async () => {
-    try {
-      const newSession = await createSession(participantId)
-      setSessions((prevSessions) => [...prevSessions, newSession])
-    } catch (error) {
-      console.error('Erreur lors de la création de la session:', error)
-    }
+  const handleCreateSession = () => {
+    // Naviguer vers la page de création de conversation
+    navigate('/chat/new')
   }
 
   const handleDeleteSession = async (sessionId) => {
@@ -76,49 +75,75 @@ const ChatSidebar = ({ participantId, onSelectSession }) => {
 
   const handleSelectSession = (session) => {
     setSelectedSession(session)
-    onSelectSession(session)
+    navigate(`/chat/${session.id}`)
   }
 
   return (
-    <div className="bg-gray-700 text-white p-4 h-full flex flex-col">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">Discussions</h2>
+    <div className="flex flex-col h-full">
+      {/* Bouton pour créer une nouvelle conversation */}
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <button
           onClick={handleCreateSession}
-          className="bg-blue-500 text-white w-12 h-12 rounded-full shadow-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-transform transform hover:scale-105 flex items-center justify-center"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200"
         >
-          <FontAwesomeIcon icon={faPlus} className="text-xl" />
+          <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
+          <span className="text-sm font-medium">Nouvelle conversation</span>
         </button>
       </div>
-      {/* Section avec une hauteur fixe pour la liste des conversations */}
-      <div className="h-40 overflow-y-auto">
-        <ul className="space-y-1">
+      
+      {/* Liste des conversations */}
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="space-y-2">
           {sessions.length > 0 ? (
             sessions.map((session) => (
-              <li
+              <div
                 key={session.id}
-                className={`flex justify-between items-center px-2 py-1 rounded-lg cursor-pointer ${
+                className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                   selectedSession?.id === session.id
-                    ? 'bg-blue-500'
-                    : 'bg-gray-600 hover:bg-gray-500'
+                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
+                    : 'hover:bg-gray-100 dark:hover:bg-surface-200 text-gray-700 dark:text-white border border-transparent'
                 }`}
                 onClick={() => handleSelectSession(session)}
               >
-                {`Conversation n°${session.id}`}
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  className="text-red-500 cursor-pointer hover:text-red-700"
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className={`w-3 h-3 rounded-full ${
+                    selectedSession?.id === session.id ? 'bg-blue-500' : 'bg-gray-400'
+                  }`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">
+                          {session.title || "Nouvelle conversation"}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-surface-400 truncate">
+                          {new Date(session.created_at).toLocaleDateString('fr-FR')}
+                        </div>
+                      </div>
+                </div>
+                <button
                   onClick={(e) => {
                     e.stopPropagation()
                     handleDeleteSession(session.id)
                   }}
-                />
-              </li>
+                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-opacity duration-200 p-1 ml-2"
+                  title="Supprimer"
+                >
+                  <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
+                </button>
+              </div>
             ))
           ) : (
-            <p className="text-gray-300">Aucune discussion disponible.</p>
+            <div className="text-center py-8">
+              <div className="w-12 h-12 mx-auto mb-4 bg-gray-200 dark:bg-surface-200 rounded-full flex items-center justify-center">
+                <FontAwesomeIcon icon={faPlus} className="w-6 h-6 text-gray-400" />
+              </div>
+              <p className="text-sm text-gray-500 dark:text-surface-400 mb-2">
+                Aucune conversation
+              </p>
+              <p className="text-xs text-gray-400 dark:text-surface-500">
+                Créez votre première conversation !
+              </p>
+            </div>
           )}
-        </ul>
+        </div>
       </div>
     </div>
   )

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../Contexts/AuthContext.jsx'
 import { toast } from 'react-toastify'
 import { redirectToCheckout } from '../../services/stripeService'
+import { usePremiumStatus } from '../../hooks/usePremiumStatus'
 import { 
   Crown, 
   Zap, 
@@ -23,7 +24,9 @@ import CTA from '../ui/CTA.jsx'
 const PremiumOffer = () => {
   const { currentUser } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const { isPremium, isLoading: subscriptionLoading } = usePremiumStatus()
 
   useEffect(() => {
     // Vérifie si c'est un retour de redirection de Checkout
@@ -37,6 +40,17 @@ const PremiumOffer = () => {
       toast.info('ℹ️ Paiement annulé. Vous pouvez continuer à explorer les offres.')
     }
   }, [location.search])
+
+  // Rediriger si l'utilisateur est déjà premium
+  useEffect(() => {
+    if (isPremium && !subscriptionLoading) {
+      toast.info('✅ Vous avez déjà un abonnement premium actif!')
+      // Rediriger vers la page principale après 2 secondes
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    }
+  }, [isPremium, subscriptionLoading, navigate])
 
   const handleCheckout = async () => {
     if (!currentUser) {
@@ -79,51 +93,34 @@ const PremiumOffer = () => {
 
   const plans = [
     {
-      name: "Explorateur",
+      name: "Gratuit",
       description: "Parfait pour découvrir CodeSphere",
       price: "Gratuit",
       features: [
-        "Éditeur Monaco basique",
+        "Éditeur Monaco avancé",
         "Preview en temps réel",
-        "Projets temporaires",
+        "Sauvegarde locale",
         "Support communautaire"
       ],
       limitations: [
-        "Pas de sauvegarde",
-        "Pas d'export",
+        "Pas d'accès au chatbot IA",
         "Fonctionnalités limitées"
       ],
       color: "from-surface-400 to-surface-600",
       popular: false
     },
     {
-      name: "Membre",
-      description: "Pour les développeurs réguliers",
-      price: "9€",
-      period: "/mois",
-      features: [
-        "Tout de l'Explorateur",
-        "Sauvegarde des projets",
-        "Export de code",
-        "Historique des versions",
-        "Support prioritaire"
-      ],
-      limitations: [],
-      color: "from-blue-500 to-cyan-500",
-      popular: false
-    },
-    {
       name: "Premium",
-      description: "L'expérience ultime pour les pros",
+      description: "Accès complet au chatbot IA",
       price: "15€",
       period: "/mois",
       features: [
-        "Tout du Membre",
-        "Assistant AI Premium",
-        "Templates exclusifs",
-        "Collaboration en temps réel",
-        "Analytics avancées",
-        "Support VIP 24/7"
+        "Tout du plan Gratuit",
+        "Assistant IA Premium",
+        "Conversations illimitées",
+        "Support Markdown complet",
+        "Génération de titres automatique",
+        "Copie de code intégrée"
       ],
       limitations: [],
       color: "from-primary-500 to-accent-500",
@@ -134,41 +131,105 @@ const PremiumOffer = () => {
   const benefits = [
     {
       icon: Bot,
-      title: "Assistant AI Premium",
-      description: "Intelligence artificielle avancée pour vous aider à coder plus rapidement",
+      title: "Assistant IA Premium",
+      description: "Chatbot intelligent avec support Markdown, génération de code et conversations illimitées",
       color: "from-primary-500 to-accent-500"
     },
     {
       icon: Zap,
-      title: "Performance Ultra-Rapide",
-      description: "Chargement instantané et expérience utilisateur fluide",
+      title: "Interface ChatGPT-like",
+      description: "Expérience utilisateur moderne avec animations fluides et design professionnel",
       color: "from-yellow-500 to-orange-500"
     },
     {
       icon: Shield,
-      title: "Sécurité Maximale",
-      description: "Votre code est protégé avec les meilleures pratiques",
+      title: "Sauvegarde Sécurisée",
+      description: "Vos conversations sont sauvegardées automatiquement dans Firebase",
       color: "from-green-500 to-emerald-500"
     },
     {
-      icon: Globe,
-      title: "Déploiement Facile",
-      description: "Déployez vers GitHub, Netlify, Vercel en un clic",
+      icon: Code2,
+      title: "Support Code Complet",
+      description: "Coloration syntaxique, copie de code et rendu Markdown avancé",
       color: "from-blue-500 to-indigo-500"
     },
     {
       icon: Users,
-      title: "Collaboration Avancée",
-      description: "Travaillez en équipe avec des outils de collaboration temps réel",
+      title: "Collaboration en Temps Réel",
+      description: "🚀 Bientôt : Travaillez en équipe avec édition simultanée et chat intégré",
       color: "from-indigo-500 to-purple-500"
     },
     {
-      icon: Rocket,
-      title: "Templates Exclusifs",
-      description: "Accédez à des templates premium et des composants avancés",
+      icon: Globe,
+      title: "Déploiement Automatique",
+      description: "🚀 Bientôt : Déployez vos projets directement vers Vercel, Netlify en un clic",
       color: "from-red-500 to-pink-500"
     }
   ]
+
+  // Afficher un écran de chargement pendant la vérification
+  if (subscriptionLoading) {
+    return (
+      <div className="min-h-screen animated-bg flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full mx-auto mb-4"
+          />
+          <h2 className="text-2xl font-bold text-surface-900 dark:text-white mb-2">
+            Vérification de votre abonnement...
+          </h2>
+          <p className="text-surface-600 dark:text-surface-400">
+            Veuillez patienter pendant que nous vérifions votre statut premium.
+          </p>
+        </motion.div>
+      </div>
+    )
+  }
+
+  // Afficher un message si l'utilisateur est déjà premium
+  if (isPremium) {
+    return (
+      <div className="min-h-screen animated-bg flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-2xl mx-auto px-4"
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl mb-8 shadow-2xl shadow-green-500/25"
+          >
+            <Crown className="w-12 h-12 text-white" />
+          </motion.div>
+          
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-surface-900 dark:text-white">
+            🎉 Vous êtes déjà Premium !
+          </h1>
+          
+          <p className="text-xl text-surface-600 dark:text-surface-400 mb-8">
+            Félicitations ! Vous avez déjà accès à toutes les fonctionnalités premium de CodeSphere.
+          </p>
+          
+          <motion.button
+            onClick={() => navigate('/')}
+            className="bg-gradient-to-r from-primary-500 to-accent-500 text-white py-4 px-8 rounded-2xl font-semibold text-lg shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Retour à l'accueil
+          </motion.button>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen animated-bg">
@@ -245,7 +306,7 @@ const PremiumOffer = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.name}
