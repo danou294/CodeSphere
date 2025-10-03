@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { useAuth } from '../Contexts/AuthContext.jsx'
 import { firestore } from '../../firebaseConfig'
+import firebase from 'firebase/app'
 import { defaultProject } from '../../constants/defaultProject'
 import { useProjectsStore } from '../../store'
 import { toast, ToastContainer } from 'react-toastify'
@@ -34,13 +34,13 @@ function CreateProject() {
     }
     setLoading(true)
     try {
-      const docRef = await addDoc(collection(firestore, 'projects'), {
+      const docRef = await firestore.collection('projects').add({
         title,
         description,
         html: defaultProject.html,
         css: defaultProject.css,
         javascript: defaultProject.js,
-        createdAt: serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         author: currentUser.uid,
         collaboration: [],
       })

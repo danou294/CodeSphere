@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  deleteDoc,
-  doc,
-} from 'firebase/firestore'
 import { useAuth } from '../Contexts/AuthContext'
 import { firestore } from '../../firebaseConfig'
 import { 
@@ -44,12 +36,7 @@ const ProjectList = () => {
     const fetchUserProjects = async () => {
       if (currentUser) {
         try {
-          const userProjectsCollection = collection(firestore, 'projects')
-          const q = query(
-            userProjectsCollection,
-            where('author', '==', currentUser.uid)
-          )
-          const querySnapshot = await getDocs(q)
+          const querySnapshot = await firestore.collection('projects').where('author', '==', currentUser.uid).get()
           const userProjectsData = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
@@ -80,7 +67,7 @@ const ProjectList = () => {
 
     if (result.isConfirmed) {
       try {
-        await deleteDoc(doc(firestore, 'projects', projectId))
+        await firestore.collection('projects').doc(projectId).delete()
         setProjects(projects.filter((project) => project.id !== projectId))
         Swal.fire(
           'Supprimé',

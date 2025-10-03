@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
-import { doc, updateDoc } from 'firebase/firestore'
 import { firestore } from '../firebaseConfig'
 
 export interface Project {
@@ -66,10 +65,10 @@ export const useProjectsStore = create<ProjectsState>()(
           try {
             // Sauvegarder dans Firebase
             console.log('📡 [STORE] Tentative de sauvegarde Firebase...')
-            const projectRef = doc(firestore, 'projects', id)
+            const projectRef = firestore.collection('projects').doc(id)
             console.log('📡 [STORE] Référence Firebase créée:', projectRef.path)
             
-            await updateDoc(projectRef, {
+            await projectRef.update({
               ...updates,
               updatedAt: new Date()
             })

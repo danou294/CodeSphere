@@ -1,17 +1,16 @@
 // LogoutButton.jsx
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAuth, signOut } from 'firebase/auth'
+import { auth } from '../../firebaseConfig'
 import { toast } from 'react-toastify' // Importer toast de react-toastify
 
 const LogoutButton = () => {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    const auth = getAuth()
-    signOut(auth)
+    auth.signOut()
       .then(() => {
-        toast.success('Déconnexion réussie !') // Notification de succès
+        toast.success('Déconnexion réussie !') // Notification de succès
         navigate('/login')
       })
       .catch((error) => {

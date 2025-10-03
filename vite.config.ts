@@ -9,12 +9,20 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-    dedupe: ['firebase'],
   },
   build: {
     chunkSizeWarningLimit: 1000,
-    target: 'esnext',
+    target: 'es2015',
     minify: 'esbuild',
+    rollupOptions: {
+      external: [],
+      output: {
+        format: 'es',
+        manualChunks: {
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics'],
+        },
+      },
+    },
   },
   server: {
     port: 3000,
@@ -23,9 +31,11 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'framer-motion'],
-    exclude: ['firebase'],
   },
   css: {
     devSourcemap: true,
+  },
+  legacy: {
+    buildPolyfills: true,
   },
 })

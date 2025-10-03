@@ -1,14 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-} from 'firebase/auth'
 import { auth, firestore } from '../../firebaseConfig'
-import { doc, setDoc } from 'firebase/firestore'
+import firebase from 'firebase/app'
 import { toast } from 'react-toastify'
 import { 
   Mail, 
@@ -63,14 +57,13 @@ function SignupForm() {
 
     setIsLoading(true)
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
+      const userCredential = await auth.createUserWithEmailAndPassword(
         email,
         password
       )
       const user = userCredential.user
       const fullAddress = `${addressLine1}, ${addressLine2}, ${city}`
-      await setDoc(doc(firestore, 'users', user.uid), {
+      await firestore.collection('users').doc(user.uid).set({
         email,
         firstName,
         lastName,
@@ -93,9 +86,9 @@ function SignupForm() {
       return
     }
     setIsLoading(true)
-    const provider = new GoogleAuthProvider()
+    const provider = new firebase.auth.GoogleAuthProvider()
     try {
-      await signInWithPopup(auth, provider)
+      await auth.signInWithPopup(provider)
       toast.success('🎉 Inscription avec Google réussie !')
       navigate('/')
     } catch (error) {
@@ -111,9 +104,9 @@ function SignupForm() {
       return
     }
     setIsLoading(true)
-    const provider = new GithubAuthProvider()
+    const provider = new firebase.auth.GithubAuthProvider()
     try {
-      await signInWithPopup(auth, provider)
+      await auth.signInWithPopup(provider)
       toast.success('🎉 Inscription avec GitHub réussie !')
       navigate('/')
     } catch (error) {

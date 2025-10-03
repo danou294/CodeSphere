@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-} from 'firebase/auth'
 import { auth } from '../../firebaseConfig'
+import firebase from 'firebase/app'
 import { toast } from 'react-toastify'
 import { 
   Mail, 
@@ -38,9 +33,9 @@ function LoginForm() {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
-    const provider = new GoogleAuthProvider()
+    const provider = new firebase.auth.GoogleAuthProvider()
     try {
-      await signInWithPopup(auth, provider)
+      await auth.signInWithPopup(provider)
     } catch (error) {
       toast.error('❌ Erreur de connexion Google : ' + error.message)
     } finally {
@@ -50,9 +45,9 @@ function LoginForm() {
 
   const handleGithubSignIn = async () => {
     setIsLoading(true)
-    const provider = new GithubAuthProvider()
+    const provider = new firebase.auth.GithubAuthProvider()
     try {
-      await signInWithPopup(auth, provider)
+      await auth.signInWithPopup(provider)
     } catch (error) {
       toast.error('❌ Erreur de connexion GitHub : ' + error.message)
     } finally {
@@ -64,7 +59,7 @@ function LoginForm() {
     e.preventDefault()
     setIsLoading(true)
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      await auth.signInWithEmailAndPassword(email, password)
     } catch (error) {
       toast.error('❌ Erreur de connexion : ' + error.message)
     } finally {
