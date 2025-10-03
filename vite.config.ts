@@ -30,12 +30,9 @@ export default defineConfig({
     host: true,
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'framer-motion'],
+    include: ['react', 'react-dom', 'framer-motion', 'firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics'],
   },
   css: {
     devSourcemap: true,
-  },
-  legacy: {
-    buildPolyfills: true,
   },
 })
