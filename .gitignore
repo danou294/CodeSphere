@@ -27,6 +27,8 @@ dist-ssr
 .env
 .env.local
 .env.production
-
-# Firebase config (contains sensitive keys)
-src/firebaseConfig.js
+.env.prod
+.env.backup
+.env.temp
+*.env
+*.env.*

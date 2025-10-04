@@ -46,7 +46,7 @@ const ModernEditProject = () => {
       console.log('📡 [ModernEditProject] Récupération du projet depuis Firestore...')
       const projectDoc = await firestore.collection('projects').doc(projectId).get()
       
-      if (projectDoc.exists()) {
+      if (projectDoc.exists) {
         console.log('✅ [ModernEditProject] Projet trouvé dans Firestore')
         const projectData = projectDoc.data()
         console.log('📊 [ModernEditProject] Données du projet:', projectData)

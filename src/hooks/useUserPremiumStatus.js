@@ -18,7 +18,7 @@ export const useUserPremiumStatus = () => {
         const userRef = firestore.collection('users').doc(currentUser.uid)
         const userDoc = await userRef.get()
         
-        if (userDoc.exists()) {
+        if (userDoc.exists) {
           const userData = userDoc.data()
           const hasPaid = userData.hasPaidForChatbot || false
           setIsPremium(hasPaid)

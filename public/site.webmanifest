@@ -1,0 +1,21 @@
+{
+  "name": "CodeSphere",
+  "short_name": "CodeSphere",
+  "description": "Plateforme de développement intégrée avec IA",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#1a1a1a",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}
