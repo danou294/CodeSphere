@@ -27,7 +27,7 @@ const ModernEditProject: React.FC = () => {
       try {
         const projectDoc = await getDoc(doc(firestore, 'projects', projectId))
         
-        if (projectDoc.exists()) {
+        if (projectDoc.exists) {
           const projectData = projectDoc.data()
           const project = {
             id: projectDoc.id,
