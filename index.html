@@ -27,5 +27,28 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Script de diagnostic CSP -->
+    <script>
+      // Écouter les erreurs CSP
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('Content Security Policy')) {
+          console.error('🚨 ERREUR CSP DÉTECTÉE:', e.message);
+          console.error('📍 URL bloquée:', e.filename || 'URL non disponible');
+          console.error('🔍 Type de ressource:', e.target ? e.target.tagName : 'Script');
+        }
+      });
+      
+      // Écouter les erreurs de chargement de ressources
+      window.addEventListener('securitypolicyviolation', function(e) {
+        console.error('🚨 VIOLATION CSP DÉTECTÉE:');
+        console.error('📍 Directive:', e.violatedDirective);
+        console.error('📍 URL bloquée:', e.blockedURI);
+        console.error('📍 Type de ressource:', e.disposition);
+        console.error('📍 Document:', e.documentURI);
+      });
+      
+      console.log('🔍 Script de diagnostic CSP chargé');
+    </script>
   </body>
 </html>
