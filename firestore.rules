@@ -1,24 +1,31 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Règles pour la collection users
+    // Règles temporaires plus permissives pour le développement
+    // TODO: Restreindre en production
+    
+    // Règles pour la collection users - Permettre tout pour les utilisateurs authentifiés
     match /users/{userId} {
-      // Permettre la lecture et écriture si l'utilisateur est authentifié et accède à son propre document
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null;
     }
     
-    // Règles pour les projets (si nécessaire)
+    // Règles pour les projets
     match /projects/{projectId} {
       allow read, write: if request.auth != null;
     }
     
-    // Règles pour les sessions de chat (si nécessaire)
+    // Règles pour les sessions de chat
     match /chatSessions/{sessionId} {
       allow read, write: if request.auth != null;
     }
     
-    // Règles pour les messages (si nécessaire)
+    // Règles pour les messages
     match /messages/{messageId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Règles pour toutes les autres collections (temporaire)
+    match /{document=**} {
       allow read, write: if request.auth != null;
     }
   }
