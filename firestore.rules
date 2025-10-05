@@ -1,8 +1,29 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Règles pour les utilisateurs - accès à ses propres données
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Règles pour les projets - tous les utilisateurs connectés
+    match /projects/{projectId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Règles pour les sessions de chat - tous les utilisateurs connectés
+    match /chat_sessions/{sessionId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Règles pour les messages de chat - tous les utilisateurs connectés
+    match /chat_messages/{messageId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Règles pour toutes les autres collections - tous les utilisateurs connectés
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }
