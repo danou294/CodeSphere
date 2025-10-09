@@ -27,11 +27,6 @@ const ChatInput = ({ sessionId, onNewMessage, onMessageSent, isNewConversation =
         setIsAnimating(false)
       }, 500) // 500ms pour l'animation
       
-        sessionId, 
-        message: message.substring(0, 50) + '...', 
-        senderId: currentUser?.uid 
-      })
-      
       try {
         const senderId = currentUser?.uid || 'anonymous'
         let response

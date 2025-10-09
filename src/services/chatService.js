@@ -4,11 +4,6 @@ export const createSession = (participantId, title = "New Session") =>
   api.post("/sessions/create/", { participant_id: participantId, title }).then(r => r.data);
 
 export const createConversationWithMessage = (participantId, content, senderId, temperature = 0.7) => {
-    participantId, 
-    content: content.substring(0, 50) + '...', 
-    senderId, 
-    temperature 
-  })
   return api.post("/conversations/create/", { 
     participant_id: participantId, 
     content, 

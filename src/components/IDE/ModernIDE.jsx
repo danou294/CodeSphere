@@ -161,14 +161,8 @@ const ModernIDE = ({
   }
 
   const handleSave = () => {
-    
     if (onSave) {
-        html: code.html.substring(0, 50) + '...',
-        css: code.css.substring(0, 50) + '...',
-        js: code.js.substring(0, 50) + '...'
-      })
       onSave(code)
-    } else {
     }
     
     // Sauvegarde locale de secours

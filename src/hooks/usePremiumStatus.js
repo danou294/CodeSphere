@@ -16,24 +16,13 @@ export const usePremiumStatus = () => {
       }
 
       try {
-          uid: currentUser.uid,
-          email: currentUser.email,
-          displayName: currentUser.displayName
-        })
-        
         // Récupérer les données utilisateur depuis Firebase
         const userRef = firestore.collection('users').doc(currentUser.uid)
-        
         const userDoc = await userRef.get()
-          exists: userDoc.exists,
-          id: userDoc.id,
-          data: userDoc.exists ? userDoc.data() : null
-        })
         
         if (userDoc.exists) {
           const userData = userDoc.data()
           const hasPaid = userData.hasPaidForChatbot || false
-          
           
           setIsPremium(hasPaid)
           
@@ -44,7 +33,6 @@ export const usePremiumStatus = () => {
             const success = urlParams.get('success')
             
             if (success === 'true' && sessionId) {
-              
               // Mettre à jour le statut premium dans Firebase
               await userRef.update({
                 hasPaidForChatbot: true,
@@ -61,8 +49,6 @@ export const usePremiumStatus = () => {
             }
           }
         } else {
-          console.warn('⚠️ [PREMIUM CHECK] Utilisateur non trouvé dans Firebase, création du document...')
-          
           // Créer le document utilisateur s'il n'existe pas
           const userData = {
             uid: currentUser.uid,
@@ -85,7 +71,6 @@ export const usePremiumStatus = () => {
             const success = urlParams.get('success')
             
             if (success === 'true' && sessionId) {
-              
               await userRef.update({
                 hasPaidForChatbot: true,
                 premiumStatus: 'active',
@@ -106,11 +91,6 @@ export const usePremiumStatus = () => {
         }
       } catch (error) {
         console.error('❌ [PREMIUM CHECK] Erreur vérification statut premium:', error)
-        console.error('❌ [PREMIUM CHECK] Détails de l\'erreur:', {
-          code: error.code,
-          message: error.message,
-          stack: error.stack
-        })
         setIsPremium(false)
       } finally {
         setIsLoading(false)
