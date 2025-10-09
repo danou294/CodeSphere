@@ -22,34 +22,19 @@ const ModernEditProject = () => {
   
   const [isLoading, setIsLoading] = useState(true)
 
-  console.log('🔍 [ModernEditProject] Rendu du composant')
-  console.log('🔍 [ModernEditProject] URL actuelle:', window.location.href)
-  console.log('🔍 [ModernEditProject] location.pathname:', location.pathname)
-  console.log('🔍 [ModernEditProject] paramsProjectId:', paramsProjectId)
-  console.log('🔍 [ModernEditProject] projectId final:', projectId)
-  console.log('🔍 [ModernEditProject] useParams complet:', useParams())
-  console.log('🔍 [ModernEditProject] currentUser:', currentUser)
-  console.log('🔍 [ModernEditProject] currentProject:', currentProject)
-  console.log('🔍 [ModernEditProject] isLoading:', isLoading)
+  // Rendu du composant
 
   const loadProject = useCallback(async () => {
-    console.log('🚀 [ModernEditProject] loadProject appelé')
-    console.log('🚀 [ModernEditProject] projectId:', projectId)
-    console.log('🚀 [ModernEditProject] currentUser:', currentUser)
     
     if (!projectId || !currentUser) {
-      console.log('❌ [ModernEditProject] projectId ou currentUser manquant')
       return
     }
 
     try {
-      console.log('📡 [ModernEditProject] Récupération du projet depuis Firestore...')
       const projectDoc = await firestore.collection('projects').doc(projectId).get()
       
       if (projectDoc.exists) {
-        console.log('✅ [ModernEditProject] Projet trouvé dans Firestore')
         const projectData = projectDoc.data()
-        console.log('📊 [ModernEditProject] Données du projet:', projectData)
         
         const project = {
           id: projectDoc.id,
@@ -63,20 +48,15 @@ const ModernEditProject = () => {
           tags: projectData.tags || []
         }
         
-        console.log('🏗️ [ModernEditProject] Projet construit:', project)
-        console.log('💾 [ModernEditProject] Appel de setCurrentProject...')
         setCurrentProject(project)
         
-        console.log('📝 [ModernEditProject] Mise à jour des onglets...')
         // Mettre à jour les onglets avec le contenu du projet
         updateTabContent('html', project.html)
         updateTabContent('css', project.css)
         updateTabContent('js', project.js)
         setActiveTab('html')
         
-        console.log('✅ [ModernEditProject] Projet chargé avec succès')
       } else {
-        console.log('❌ [ModernEditProject] Projet non trouvé dans Firestore')
         toast.error('Projet non trouvé')
         navigate('/projectlist')
       }
@@ -85,13 +65,11 @@ const ModernEditProject = () => {
       toast.error('Erreur lors du chargement du projet')
       navigate('/projectlist')
     } finally {
-      console.log('🏁 [ModernEditProject] Fin du chargement, isLoading = false')
       setIsLoading(false)
     }
   }, [projectId, currentUser, setCurrentProject, updateTabContent, setActiveTab, navigate])
 
   useEffect(() => {
-    console.log('🔄 [ModernEditProject] useEffect déclenché')
     loadProject()
   }, [loadProject])
 
@@ -101,7 +79,6 @@ const ModernEditProject = () => {
   }
 
   if (isLoading) {
-    console.log('⏳ [ModernEditProject] Affichage du LoadingSpinner')
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" text="Chargement du projet..." />
@@ -110,7 +87,6 @@ const ModernEditProject = () => {
   }
 
   if (!currentProject) {
-    console.log('❌ [ModernEditProject] currentProject est null, affichage de l\'erreur')
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -126,7 +102,6 @@ const ModernEditProject = () => {
     )
   }
 
-  console.log('🎯 [ModernEditProject] Rendu de l\'éditeur avec le projet:', currentProject)
   
   return (
     <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
@@ -184,14 +159,12 @@ const ModernEditProject = () => {
           projectName={currentProject.name}
           onContentChange={async (type, content) => {
             // Mise à jour automatique du projet en temps réel
-            console.log('🔄 [EDIT] Modification détectée:', { type, content: content.substring(0, 50) + '...' })
             try {
               await updateProject(currentProject.id, {
                 ...currentProject,
                 [type]: content,
                 updatedAt: new Date()
               })
-              console.log('✅ [EDIT] Projet mis à jour automatiquement')
             } catch (error) {
               console.error('❌ [EDIT] Erreur lors de la mise à jour automatique:', error)
             }

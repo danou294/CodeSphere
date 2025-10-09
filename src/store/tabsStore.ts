@@ -39,7 +39,6 @@ const defaultTabs: Tab[] = [
     id: 'js',
     title: 'JavaScript',
     type: 'js',
-    content: '// Votre JavaScript ici\nconsole.log("CodeSphere IDE est prêt !");\n\n// Exemple d\'interactivité\ndocument.addEventListener("DOMContentLoaded", function() {\n  const h1 = document.querySelector("h1");\n  h1.addEventListener("click", function() {\n    this.style.transform = "scale(1.1)";\n    setTimeout(() => {\n      this.style.transform = "scale(1)";\n    }, 200);\n  });\n});',
     isActive: false
   }
 ]

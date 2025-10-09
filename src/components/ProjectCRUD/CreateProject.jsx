@@ -44,7 +44,6 @@ function CreateProject() {
         author: currentUser.uid,
         collaboration: [],
       })
-      console.log('Document written with ID: ', docRef.id)
       toast.success('🎉 Projet créé avec succès !')
       navigate('/projectList')
     } catch (error) {

@@ -23,7 +23,6 @@ const NewConversation = () => {
   }
 
   const handleNewMessage = (response) => {
-    console.log('🔄 [NEW CONVERSATION] Nouvelle conversation créée:', response)
     
     if (response && response.session && response.messages) {
       // Rediriger vers la conversation créée

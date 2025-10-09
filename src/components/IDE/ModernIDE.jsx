@@ -25,7 +25,6 @@ const ModernIDE = ({
   initialCode = {
     html: '<!DOCTYPE html>\n<html>\n<head>\n  <title>Mon Projet Gratuit</title>\n</head>\n<body>\n  <h1>Bienvenue sur CodeSphere !</h1>\n  <p>Commencez à coder gratuitement dès maintenant.</p>\n  <div class="features">\n    <div class="feature">\n      <h3>🚀 Éditeur Monaco</h3>\n      <p>L\'éditeur de code le plus avancé</p>\n    </div>\n    <div class="feature">\n      <h3>👁️ Preview Temps Réel</h3>\n      <p>Voyez vos changements instantanément</p>\n    </div>\n    <div class="feature">\n      <h3>💾 Sauvegarde Locale</h3>\n      <p>Vos projets sont sauvegardés localement</p>\n    </div>\n  </div>\n</body>\n</html>',
     css: 'body {\n  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;\n  margin: 0;\n  padding: 20px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  min-height: 100vh;\n}\n\nh1 {\n  text-align: center;\n  margin-bottom: 30px;\n  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);\n  font-size: 2.5em;\n}\n\np {\n  text-align: center;\n  font-size: 18px;\n  margin-bottom: 40px;\n}\n\n.features {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n  gap: 20px;\n  max-width: 800px;\n  margin: 0 auto;\n}\n\n.feature {\n  background: rgba(255, 255, 255, 0.1);\n  padding: 20px;\n  border-radius: 10px;\n  backdrop-filter: blur(10px);\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  text-align: center;\n  transition: transform 0.3s ease;\n}\n\n.feature:hover {\n  transform: translateY(-5px);\n}\n\n.feature h3 {\n  margin: 0 0 10px 0;\n  font-size: 1.2em;\n}\n\n.feature p {\n  margin: 0;\n  font-size: 14px;\n  opacity: 0.9;\n}',
-    js: '// CodeSphere IDE Gratuit - JavaScript\nconsole.log("CodeSphere IDE gratuit est prêt !");\n\n// Exemple d\'interactivité\ndocument.addEventListener("DOMContentLoaded", function() {\n  const features = document.querySelectorAll(".feature");\n  \n  features.forEach((feature, index) => {\n    feature.style.opacity = "0";\n    feature.style.transform = "translateY(20px)";\n    \n    setTimeout(() => {\n      feature.style.transition = "all 0.5s ease";\n      feature.style.opacity = "1";\n      feature.style.transform = "translateY(0)";\n    }, index * 100);\n  });\n});'
   },
   onSave,
   projectName = "🚀 Mon Projet CodeSphere",
@@ -115,7 +114,6 @@ const ModernIDE = ({
     if (autoSave) {
       const timer = setTimeout(() => {
         localStorage.setItem('codesphere-project-gratuit', JSON.stringify(code))
-        console.log('💾 Auto-sauvegarde locale effectuée')
       }, 2000)
       return () => clearTimeout(timer)
     }
@@ -151,9 +149,7 @@ const ModernIDE = ({
       // Appeler le callback pour notifier les changements SEULEMENT si auto-sauvegarde activée
       if (onContentChange && autoSave) {
         onContentChange(language, value)
-        console.log('🔄 [IDE] Code modifié + Auto-sauvegarde:', { language, value: value.substring(0, 50) + '...' })
       } else if (!autoSave) {
-        console.log('🔄 [IDE] Code modifié (sans auto-sauvegarde):', { language, value: value.substring(0, 50) + '...' })
       }
     }
   }
@@ -162,26 +158,21 @@ const ModernIDE = ({
     setAutoSave(checked)
     // Sauvegarder la préférence dans localStorage
     localStorage.setItem('codesphere-autosave', JSON.stringify(checked))
-    console.log('💾 [IDE] Préférence auto-sauvegarde sauvegardée:', checked)
   }
 
   const handleSave = () => {
-    console.log('💾 [IDE] Bouton de sauvegarde manuelle cliqué')
     
     if (onSave) {
-      console.log('💾 [IDE] Appel de onSave avec le code:', { 
         html: code.html.substring(0, 50) + '...',
         css: code.css.substring(0, 50) + '...',
         js: code.js.substring(0, 50) + '...'
       })
       onSave(code)
     } else {
-      console.log('⚠️ [IDE] onSave non défini - sauvegarde locale uniquement')
     }
     
     // Sauvegarde locale de secours
     localStorage.setItem('codesphere-project-gratuit', JSON.stringify(code))
-    console.log('💾 [IDE] Projet sauvegardé localement')
   }
 
   const handleReset = () => {

@@ -58,7 +58,6 @@ const ChatPanel = ({ participantId }) => {
   useEffect(() => {
     const handleFocus = () => {
       if (participantId) {
-        console.log('🔄 [CHAT PANEL] Rechargement des sessions au focus')
         const fetchSessions = async () => {
           try {
             const response = await listSessions(participantId)
@@ -81,7 +80,6 @@ const ChatPanel = ({ participantId }) => {
     if (sessionId && sessions.length > 0) {
       const session = sessions.find(s => s.id === parseInt(sessionId))
       if (session && lastLoadedSessionRef.current !== session.id) {
-        console.log('🔄 [CHAT PANEL] Session trouvée dans URL:', session.id)
         setSelectedSession(session)
         lastLoadedSessionRef.current = session.id
         
@@ -89,16 +87,12 @@ const ChatPanel = ({ participantId }) => {
       const fetchMessages = async () => {
           setIsLoadingMessages(true)
           try {
-            console.log('📡 [CHAT PANEL] Chargement messages depuis URL pour session:', session.id)
             const messagesData = await getMessages(session.id)
-            console.log('📨 [CHAT PANEL] Messages chargés depuis URL:', messagesData)
-            console.log('📨 [CHAT PANEL] Messages extraits:', messagesData.messages)
             setMessages(messagesData.messages || [])
         } catch (error) {
             console.error('❌ [CHAT PANEL] Erreur lors du chargement depuis URL:', error)
             // Si la session n'existe plus, rediriger vers la liste des conversations
             if (error.response?.data?.error?.includes('No ChatSession matches')) {
-              console.log('🔄 [CHAT PANEL] Session supprimée depuis URL, redirection vers /chat')
               showNotification('Cette conversation a été supprimée', 'warning')
               navigate('/chat')
             }
@@ -115,11 +109,9 @@ const ChatPanel = ({ participantId }) => {
   // Les messages sont maintenant chargés directement dans handleSelectSession et dans le useEffect de l'URL
 
   const handleSelectSession = async (session) => {
-    console.log('🔄 [CHAT PANEL] Sélection de session:', session.id)
     
     // Éviter de recharger si c'est la même session
     if (lastLoadedSessionRef.current === session.id) {
-      console.log('🔄 [CHAT PANEL] Session déjà chargée, pas de rechargement')
       navigate(`/chat/${session.id}`)
       return
     }
@@ -131,16 +123,12 @@ const ChatPanel = ({ participantId }) => {
     // Charger immédiatement les messages de cette session
     setIsLoadingMessages(true)
     try {
-      console.log('📡 [CHAT PANEL] Chargement immédiat des messages pour session:', session.id)
       const messagesData = await getMessages(session.id)
-      console.log('📨 [CHAT PANEL] Messages chargés immédiatement:', messagesData)
-      console.log('📨 [CHAT PANEL] Messages extraits:', messagesData.messages)
       setMessages(messagesData.messages || [])
     } catch (error) {
       console.error('❌ [CHAT PANEL] Erreur lors du chargement immédiat des messages:', error)
       // Si la session n'existe plus, rediriger vers la liste des conversations
       if (error.response?.data?.error?.includes('No ChatSession matches')) {
-        console.log('🔄 [CHAT PANEL] Session supprimée depuis sélection, redirection vers /chat')
         showNotification('Cette conversation a été supprimée', 'warning')
         navigate('/chat')
       }
@@ -150,16 +138,13 @@ const ChatPanel = ({ participantId }) => {
   }
 
   const handleNewMessage = (response) => {
-    console.log('🔄 [CHAT PANEL] Nouveau message reçu:', response)
     setIsWaitingForResponse(false) // Arrêter l'attente
     setTempUserMessage(null) // Supprimer le message temporaire
     
     if (response && response.messages) {
-      console.log('📨 [CHAT PANEL] Mise à jour des messages avec:', response.messages)
       setMessages(response.messages)
       // Suppression de la notification de succès
     } else {
-      console.log('⚠️ [CHAT PANEL] Réponse invalide, rechargement des messages...')
       showNotification('Erreur lors de la réception du message', 'error')
       // Recharger les messages si la réponse n'est pas dans le bon format
       if (selectedSession) {
@@ -172,7 +157,6 @@ const ChatPanel = ({ participantId }) => {
             console.error('❌ [CHAT PANEL] Erreur lors du rechargement:', error)
             // Si la session n'existe plus, rediriger vers la liste des conversations
             if (error.response?.data?.error?.includes('No ChatSession matches')) {
-              console.log('🔄 [CHAT PANEL] Session supprimée, redirection vers /chat')
               showNotification('Cette conversation a été supprimée', 'warning')
               navigate('/chat')
             }

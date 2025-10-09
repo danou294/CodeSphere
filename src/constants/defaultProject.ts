@@ -76,7 +76,6 @@ p {
 }`,
 
   js: `// JavaScript pour votre projet CodeSphere
-console.log("🚀 CodeSphere IDE est prêt !");
 
 // Attendre que le DOM soit chargé
 document.addEventListener("DOMContentLoaded", function() {
@@ -161,7 +160,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Fonction utilitaire pour déboguer
 function debug(message) {
-  console.log("🐛 Debug:", message);
 }
 
 // Message de bienvenue

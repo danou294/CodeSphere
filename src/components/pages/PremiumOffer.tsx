@@ -58,25 +58,18 @@ const PremiumOffer = () => {
       return
     }
 
-    console.log('🔍 [CHECKOUT] Début du processus de paiement')
-    console.log('🔍 [CHECKOUT] Utilisateur connecté:', currentUser.uid)
-    console.log('🔍 [CHECKOUT] URL API:', import.meta.env.VITE_API_BASE_URL)
-    console.log('🔍 [CHECKOUT] Clé Stripe:', import.meta.env.VITE_STRIPE_PUBLIC_KEY ? '✅ Configurée' : '❌ Manquante')
 
     setIsLoading(true)
     try {
-      console.log('🔍 [CHECKOUT] Appel de redirectToCheckout...')
       
       // Redirection vers Stripe Checkout
       const result = await redirectToCheckout()
       
-      console.log('🔍 [CHECKOUT] Résultat Stripe:', result)
       
       if (result.error) {
         console.error('❌ [CHECKOUT] Erreur Stripe:', result.error)
         toast.error('Erreur lors de la redirection vers le paiement. Veuillez réessayer.')
       } else {
-        console.log('✅ [CHECKOUT] Redirection réussie vers Stripe')
       }
       // Si succès, l'utilisateur est redirigé vers Stripe automatiquement
       

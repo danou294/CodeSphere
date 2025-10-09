@@ -36,7 +36,6 @@ const ModernIDE: React.FC<ModernIDEProps> = ({
   initialCode = {
     html: '<!DOCTYPE html>\n<html>\n<head>\n  <title>Mon Projet</title>\n</head>\n<body>\n  <h1>Bienvenue sur CodeSphere !</h1>\n  <p>Commencez à coder dès maintenant.</p>\n</body>\n</html>',
     css: 'body {\n  font-family: Arial, sans-serif;\n  margin: 0;\n  padding: 20px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  min-height: 100vh;\n}\n\nh1 {\n  text-align: center;\n  margin-bottom: 20px;\n  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);\n}\n\np {\n  text-align: center;\n  font-size: 18px;\n}',
-    js: '// Votre JavaScript ici\nconsole.log("CodeSphere IDE est prêt !");\n\n// Exemple d\'interactivité\ndocument.addEventListener("DOMContentLoaded", function() {\n  const h1 = document.querySelector("h1");\n  h1.addEventListener("click", function() {\n    this.style.transform = "scale(1.1)";\n    setTimeout(() => {\n      this.style.transform = "scale(1)";\n    }, 200);\n  });\n});'
   },
   onSave,
   onCodeChange,
@@ -110,9 +109,7 @@ const ModernIDE: React.FC<ModernIDEProps> = ({
       // Appeler le callback pour notifier les changements SEULEMENT si auto-sauvegarde activée
       if (onCodeChange && autoSave) {
         onCodeChange(newCode)
-        console.log('🔄 [IDE] Code modifié + Auto-sauvegarde:', { language, value: value.substring(0, 50) + '...' })
       } else if (!autoSave) {
-        console.log('🔄 [IDE] Code modifié (sans auto-sauvegarde):', { language, value: value.substring(0, 50) + '...' })
       }
     }
   }
@@ -121,7 +118,6 @@ const ModernIDE: React.FC<ModernIDEProps> = ({
     setAutoSave(checked)
     // Sauvegarder la préférence dans localStorage
     localStorage.setItem('codesphere-autosave', JSON.stringify(checked))
-    console.log('💾 [IDE] Préférence auto-sauvegarde sauvegardée:', checked)
   }
 
   const handleSave = async () => {

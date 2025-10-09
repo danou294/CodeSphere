@@ -4,7 +4,6 @@ export const createSession = (participantId, title = "New Session") =>
   api.post("/sessions/create/", { participant_id: participantId, title }).then(r => r.data);
 
 export const createConversationWithMessage = (participantId, content, senderId, temperature = 0.7) => {
-  console.log('📡 [CHAT SERVICE] createConversationWithMessage appelé avec:', { 
     participantId, 
     content: content.substring(0, 50) + '...', 
     senderId, 
@@ -17,7 +16,6 @@ export const createConversationWithMessage = (participantId, content, senderId, 
     temperature 
   })
     .then(r => {
-      console.log('✅ [CHAT SERVICE] Réponse createConversationWithMessage:', r.data)
       return r.data
     })
     .catch(error => {
@@ -33,10 +31,8 @@ export const deleteSession = (sessionId) =>
   api.delete(`/sessions/${sessionId}/delete/`).then(r => r.data);
 
 export const addMessage = (sessionId, content, senderId) => {
-  console.log('📡 [CHAT SERVICE] addMessage appelé avec:', { sessionId, content: content.substring(0, 50) + '...', senderId })
   return api.post(`/sessions/${sessionId}/messages/add/`, { content, sender_id: senderId })
     .then(r => {
-      console.log('✅ [CHAT SERVICE] Réponse addMessage:', r.data)
       return r.data
     })
     .catch(error => {
@@ -46,10 +42,8 @@ export const addMessage = (sessionId, content, senderId) => {
 };
 
 export const listMessages = (sessionId) => {
-  console.log('📡 [CHAT SERVICE] listMessages appelé pour session:', sessionId)
   return api.get(`/sessions/${sessionId}/messages/`)
     .then(r => {
-      console.log('✅ [CHAT SERVICE] Réponse listMessages:', r.data)
       return r.data
     })
     .catch(error => {

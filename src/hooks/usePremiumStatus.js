@@ -11,14 +11,11 @@ export const usePremiumStatus = () => {
   useEffect(() => {
     const checkPremiumStatus = async () => {
       if (!currentUser) {
-        console.log('🔍 [PREMIUM CHECK] Pas d\'utilisateur connecté')
         setIsLoading(false)
         return
       }
 
       try {
-        console.log('🔍 [PREMIUM CHECK] Vérification statut premium pour:', currentUser.uid)
-        console.log('🔍 [PREMIUM CHECK] Utilisateur Firebase Auth:', {
           uid: currentUser.uid,
           email: currentUser.email,
           displayName: currentUser.displayName
@@ -26,10 +23,8 @@ export const usePremiumStatus = () => {
         
         // Récupérer les données utilisateur depuis Firebase
         const userRef = firestore.collection('users').doc(currentUser.uid)
-        console.log('🔍 [PREMIUM CHECK] Tentative de lecture du document:', userRef.path)
         
         const userDoc = await userRef.get()
-        console.log('🔍 [PREMIUM CHECK] Résultat de la lecture:', {
           exists: userDoc.exists,
           id: userDoc.id,
           data: userDoc.exists ? userDoc.data() : null
@@ -39,7 +34,6 @@ export const usePremiumStatus = () => {
           const userData = userDoc.data()
           const hasPaid = userData.hasPaidForChatbot || false
           
-          console.log('🔍 [PREMIUM CHECK] Statut Firebase:', { hasPaid, userData })
           
           setIsPremium(hasPaid)
           
@@ -50,7 +44,6 @@ export const usePremiumStatus = () => {
             const success = urlParams.get('success')
             
             if (success === 'true' && sessionId) {
-              console.log('🔍 [PREMIUM CHECK] Paiement détecté, mise à jour du statut...')
               
               // Mettre à jour le statut premium dans Firebase
               await userRef.update({
@@ -60,7 +53,6 @@ export const usePremiumStatus = () => {
                 premiumActivatedAt: firebase.firestore.FieldValue.serverTimestamp()
               })
               
-              console.log('✅ [PREMIUM CHECK] Statut premium mis à jour avec succès')
               setIsPremium(true)
               
               // Nettoyer l'URL
@@ -85,7 +77,6 @@ export const usePremiumStatus = () => {
           
           try {
             await userRef.set(userData)
-            console.log('✅ [PREMIUM CHECK] Document utilisateur créé avec succès')
             setIsPremium(false)
             
             // Vérifier s'il y a un session_id dans l'URL après création
@@ -94,7 +85,6 @@ export const usePremiumStatus = () => {
             const success = urlParams.get('success')
             
             if (success === 'true' && sessionId) {
-              console.log('🔍 [PREMIUM CHECK] Paiement détecté après création, mise à jour du statut...')
               
               await userRef.update({
                 hasPaidForChatbot: true,
@@ -103,7 +93,6 @@ export const usePremiumStatus = () => {
                 premiumActivatedAt: firebase.firestore.FieldValue.serverTimestamp()
               })
               
-              console.log('✅ [PREMIUM CHECK] Statut premium mis à jour avec succès')
               setIsPremium(true)
               
               // Nettoyer l'URL

@@ -7,11 +7,8 @@ const DeleteProject = ({ projectId, onDelete }) => {
   const navigate = useNavigate()
 
   const handleDelete = async () => {
-    console.log("Suppression du projet avec l'ID :", projectId)
     try {
-      console.log('Avant suppression du projet')
       await deleteDoc(doc(firestore, 'projects', projectId))
-      console.log('Après suppression du projet')
       onDelete(projectId)
       navigate('/projectlist')
     } catch (error) {

@@ -57,7 +57,6 @@ const EditProject = () => {
         <ModernIDE 
           projectName="Nouveau Projet"
           onSave={(code) => {
-            console.log('Code sauvegardé:', code)
             // Ici vous pouvez ajouter la logique de sauvegarde
           }}
         />

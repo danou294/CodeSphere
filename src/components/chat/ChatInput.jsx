@@ -27,7 +27,6 @@ const ChatInput = ({ sessionId, onNewMessage, onMessageSent, isNewConversation =
         setIsAnimating(false)
       }, 500) // 500ms pour l'animation
       
-      console.log('📤 [CHAT INPUT] Début envoi message:', { 
         sessionId, 
         message: message.substring(0, 50) + '...', 
         senderId: currentUser?.uid 
@@ -38,18 +37,13 @@ const ChatInput = ({ sessionId, onNewMessage, onMessageSent, isNewConversation =
         let response
         
         if (isNewConversation) {
-          console.log('📤 [CHAT INPUT] Création nouvelle conversation avec message:', { message: messageToSend, senderId })
           response = await createConversationWithMessage(currentUser.uid, messageToSend, senderId)
-          console.log('✅ [CHAT INPUT] Nouvelle conversation créée:', response)
         } else {
-          console.log('📤 [CHAT INPUT] Ajout message à conversation existante:', { sessionId, message: messageToSend, senderId })
           response = await addMessage(sessionId, messageToSend, senderId)
-          console.log('✅ [CHAT INPUT] Message ajouté:', response)
         }
         
         setMessage('')
         onNewMessage(response) // Mettre à jour l'état des messages après envoi
-        console.log('✅ [CHAT INPUT] Opération réussie')
       } catch (error) {
         console.error('❌ [CHAT INPUT] Erreur lors de l\'envoi du message:', error)
         console.error('❌ [CHAT INPUT] Détails de l\'erreur:', error.response?.data)
@@ -72,7 +66,6 @@ const ChatInput = ({ sessionId, onNewMessage, onMessageSent, isNewConversation =
         setIsSending(false)
       }
     } else if (!message.trim()) {
-      console.log('⚠️ [CHAT INPUT] Message vide, envoi annulé')
       Swal.fire(
         'Erreur',
         'Le champ de message ne peut pas être vide.',
