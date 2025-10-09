@@ -47,15 +47,5 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-        <!-- 🔍 Script de diagnostic CSP (à garder en dev uniquement) - Cache bust v4 Firebase butter-def FORCÉ -->
-    <script>
-      window.addEventListener('securitypolicyviolation', function (e) {
-        console.error('🚨 VIOLATION CSP DÉTECTÉE:');
-        console.error('📍 Directive:', e.violatedDirective);
-        console.error('📍 URL bloquée:', e.blockedURI);
-        console.error('📍 Type de ressource:', e.disposition);
-        console.error('📍 Document:', e.documentURI);
-      });
-    </script>
   </body>
 </html>
