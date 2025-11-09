@@ -87,9 +87,11 @@ const Footer = () => {
               className="mb-6"
             >
               <Link to="/" className="flex items-center space-x-3 group">
-                <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-primary-500/25 transition-all duration-300">
-                  <Code2 className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
-                </div>
+                <img 
+                  src="/Assets/logo.png" 
+                  alt="CodeSphere Logo" 
+                  className="w-10 h-10 object-contain group-hover:scale-110 transition-transform"
+                />
                 <span className="text-2xl font-bold text-black dark:text-black group-hover:scale-105 transition-transform">
                   CodeSphere
                 </span>

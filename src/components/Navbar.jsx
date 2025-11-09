@@ -10,7 +10,6 @@ import {
   User, 
   LogOut, 
   Crown,
-  Code2,
   Home,
   Info,
   Contact,
@@ -50,9 +49,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-14 sm:h-16 lg:h-18">
           {/* Logo - Responsive */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-primary-500/50 transition-all duration-300">
-              <Code2 className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white group-hover:scale-110 transition-transform" />
-            </div>
+            <img 
+              src="/Assets/logo.png" 
+              alt="CodeSphere Logo" 
+              className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 object-contain group-hover:scale-110 transition-transform"
+            />
             <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-surface-700 dark:text-white group-hover:scale-105 transition-transform">
               CodeSphere
             </span>

@@ -100,9 +100,13 @@ const Presentation = () => {
                 stiffness: 200, 
                 damping: 20 
               }}
-              className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-primary-500 to-accent-500 rounded-3xl mb-8 shadow-2xl shadow-primary-500/25"
+              className="inline-flex items-center justify-center w-24 h-24 mb-8"
             >
-              <Code2 className="w-12 h-12 text-white" />
+              <img 
+                src="/Assets/logo.png" 
+                alt="CodeSphere Logo" 
+                className="w-24 h-24 object-contain"
+              />
             </motion.div>
             <h1 className="text-5xl md:text-7xl font-bold mb-8 text-surface-900 dark:text-white">
               Notre Histoire & Vision

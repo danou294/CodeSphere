@@ -13,7 +13,6 @@ import {
   Eye, 
   EyeOff, 
   ArrowRight,
-  Code2,
   Sparkles,
   CheckCircle
 } from 'lucide-react'
@@ -133,9 +132,13 @@ function SignupForm() {
         >
           <motion.div
             whileHover={{ scale: 1.05, rotate: 5 }}
-            className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-2xl mb-4 shadow-xl shadow-primary-500/25"
+            className="inline-flex items-center justify-center w-16 h-16 mb-4"
           >
-            <Code2 className="w-8 h-8 text-white" />
+            <img 
+              src="/Assets/logo.png" 
+              alt="CodeSphere Logo" 
+              className="w-16 h-16 object-contain"
+            />
           </motion.div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-surface-900 to-surface-600 dark:from-white dark:to-surface-300 bg-clip-text text-transparent mb-2">
             CodeSphere

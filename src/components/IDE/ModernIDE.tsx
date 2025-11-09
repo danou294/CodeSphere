@@ -194,9 +194,11 @@ const ModernIDE: React.FC<ModernIDEProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg flex items-center justify-center">
-                <Code2 className="w-5 h-5 text-white" />
-              </div>
+              <img 
+                src="/Assets/logo.png" 
+                alt="CodeSphere Logo" 
+                className="w-8 h-8 object-contain"
+              />
               <span className="text-xl font-bold gradient-text">{projectName}</span>
             </div>
           </div>

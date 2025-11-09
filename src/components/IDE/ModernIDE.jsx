@@ -223,9 +223,11 @@ const ModernIDE = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 md:space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg flex items-center justify-center">
-                <Code2 className="w-3 h-3 md:w-5 md:h-5 text-white" />
-              </div>
+              <img 
+                src="/Assets/logo.png" 
+                alt="CodeSphere Logo" 
+                className="w-6 h-6 md:w-8 md:h-8 object-contain"
+              />
               <div className="flex flex-col items-start">
                 <span className="text-lg md:text-xl font-bold gradient-text">{projectName}</span>
                 <div className="flex items-center space-x-2">
